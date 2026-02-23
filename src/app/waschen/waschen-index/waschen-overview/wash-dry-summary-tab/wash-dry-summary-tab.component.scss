@@ -1,0 +1,97 @@
+@use "sass:color";
+.summary-container {
+  background-color: #333; /* Dark background */
+  color: #f8f8f8; /* Light text */
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+.summary-title {
+  color: #fff; /* White color for headings */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-usage {
+  background-color: #444; /* Slightly lighter dark background for contrast */
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.user-name {
+  color: #adff2f; /* Green-yellowish color for the username for better visibility */
+}
+
+.reservation-info {
+  color: #ccc; /* Light grey for less important information */
+}
+
+.reservation-count, .cost-value {
+  color: #fff; /* White color for important numbers */
+  font-weight: bold;
+}
+
+.total-cost {
+  font-size: 1.1em;
+  margin-top: 10px;
+}
+
+/* Additional styling to ensure visibility and aesthetics */
+p {
+  line-height: 1.6; /* More readable line height */
+}
+
+h3 {
+  margin-bottom: 5px; /* Space between the username and reservations */
+}
+
+.summary-container {
+  // your existing styles
+
+  .user-usage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; // space between users
+
+    .user-info {
+      // styles for the user info section
+    }
+
+    .button-container {
+      text-align: right;
+      align-self: flex-end;
+      margin-bottom: 6px;
+    }
+
+    .paid-button {
+      min-width: 100px; // give a minimum width to the button
+      // you can also add other styles like padding, font-size etc.
+    }
+  }
+
+  // If you want to add more customizations to the button
+  .mat-raised-button {
+    background-color: #4CAF50; // example color, choose what suits your design
+    color: white;
+
+    &:hover {
+      background-color: color.adjust(#4CAF50, $lightness: -10%);
+    }
+
+    &:disabled {
+      background-color: color.adjust(#4CAF50, $lightness: 25%);
+      color: color.adjust(white, $lightness: 10%);
+    }
+  }
+}
+
+.max-width-100 {
+  max-width: 100%;
+}

@@ -1,0 +1,65 @@
+<div class="mobility-card" *ngIf="resource">
+  <div class="header">
+    <div class="icon-wrapper">
+      <mat-icon>{{ resource.icon }}</mat-icon>
+    </div>
+    <div class="title" style="cursor: pointer" routerLink="/mobility">
+      <h3>{{ resource.name }} <span>&rsaquo;</span></h3>
+      <div class="status-row">
+        <span class="status-badge" [ngClass]="statusColor">{{ statusText }}</span>
+        @if (currentOccupantName && statusColor === 'red') {
+        <span class="occupant-name">
+          &bull; {{ currentOccupantName }}
+        </span>
+        }
+      </div>
+    </div>
+    <div class="actions">
+      <button mat-mini-fab color="primary" (click)="openBookingDialog()" matTooltip="Reservieren">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="timeline-container">
+    <div class="timeline-track">
+      <!-- Ruler Lines -->
+      <div class="ruler-line" style="left: 0%"></div> <!-- 06:00 -->
+      <div class="ruler-line" style="left: 33.3%"></div> <!-- 12:00 -->
+      <div class="ruler-line" style="left: 66.6%"></div> <!-- 18:00 -->
+      <div class="ruler-line" style="left: 100%"></div> <!-- 24:00 -->
+
+      <!-- Reservations -->
+      @for (block of timelineBlocks; track block.reservationId) {
+      <div class="timeline-block busy" [style.left.%]="block.left" [style.width.%]="block.width"
+        [matTooltip]="block.tooltip" (click)="onBlockClick(block)">
+        @if (activeBlock === block && block.occupantName) {
+        <div class="occupant-bubble">
+          {{ block.occupantName }}
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Current Time Indicator -->
+      <div class="current-time-marker" [style.left.%]="currentTimePosition" matTooltip="Jetzt">
+        <div class="dot"></div>
+      </div>
+    </div>
+    <div class="timeline-labels">
+      <span>06:00</span>
+      <span>12:00</span>
+      <span>18:00</span>
+      <span>24:00</span>
+    </div>
+  </div>
+
+  @if (activeReservation) {
+  <div class="card-footer">
+    <button mat-flat-button color="primary" (click)="returnBike()" class="return-btn">
+      <mat-icon>assignment_return</mat-icon>
+      Rad jetzt zurückstellen
+    </button>
+  </div>
+  }
+</div>

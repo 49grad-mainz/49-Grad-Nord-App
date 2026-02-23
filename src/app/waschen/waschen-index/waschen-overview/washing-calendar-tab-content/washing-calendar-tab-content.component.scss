@@ -1,0 +1,330 @@
+.day-view {
+  width: 100%;
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+.time-slots {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1em 0;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced current-hour styling to match the modern theme */
+.time-slot.current-hour {
+  background: linear-gradient(to bottom,
+    rgba(168, 132, 37, 0.15) 0%,
+    rgba(168, 132, 37, 0.08) 50%,
+    rgba(168, 132, 37, 0.02) 100%
+  );
+  border-top: 2px solid #a88425;
+  border-bottom: 1px solid rgba(168, 132, 37, 0.3);
+  box-shadow: 0 2px 8px rgba(168, 132, 37, 0.1);
+}
+
+.time {
+  flex: 1;
+  text-align: left;
+}
+
+.machine-reservations {
+  flex: 4;
+  display: flex;
+}
+
+/* Subtle border improvements for better visual separation */
+.machine-reservation {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reservation {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  font-weight: 300;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  /* Default free slot - modern blue-grey gradient */
+  background: linear-gradient(135deg, #607d8b 0%, #78909c 100%);
+  color: #ffffff;
+  border: 1px solid rgba(96, 125, 139, 0.3);
+}
+
+.reservation.reserved {
+  background: linear-gradient(135deg, #f4e4bc 0%, #f0d98d 50%, #e8c547 100%);
+  color: #2e2e2e;
+  border: 1px solid rgba(255, 138, 101, 0.4);
+  box-shadow: 0 3px 10px rgba(255, 138, 101, 0.25);
+  font-weight: 500;
+}
+
+.reservation.reserved:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 138, 101, 0.35);
+}
+
+/* Progressive evening darkening for free slots */
+.reservation.evening-free-21 {
+  background: linear-gradient(135deg, #455a64 0%, #546e7a 100%);
+  color: #e0e0e0;
+  border: 1px solid rgba(84, 110, 122, 0.4);
+  box-shadow: 0 2px 6px rgba(69, 90, 100, 0.2);
+}
+
+.reservation.evening-free-22 {
+  background: linear-gradient(135deg, #37474f 0%, #455a64 100%);
+  color: #e8eaf6;
+  border: 1px solid rgba(55, 71, 79, 0.5);
+  box-shadow: 0 2px 8px rgba(55, 71, 79, 0.3);
+}
+
+.reservation.evening-free-23 {
+  background: linear-gradient(135deg, #263238 0%, #37474f 100%);
+  color: #f5f5f5;
+  border: 1px solid rgba(38, 50, 56, 0.6);
+  box-shadow: 0 3px 12px rgba(38, 50, 56, 0.4);
+}
+
+/* Overnight reservation styling */
+.reservation.overnight {
+  background: linear-gradient(135deg, #1976d2 0%, #1e88e5 30%, #2196f3 70%, #42a5f5 100%);
+  color: #ffffff;
+  border: 2px solid rgba(25, 118, 210, 0.6);
+  box-shadow:
+    0 4px 15px rgba(25, 118, 210, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  position: relative;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.reservation.overnight::before {
+  content: "🌙";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.8em;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+}
+
+.reservation.overnight::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
+  );
+  animation: shimmer 3s infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.reservation.overnight:hover {
+  transform: translateZ(0) translateY(-3px);
+  box-shadow:
+    0 8px 25px rgba(25, 118, 210, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Long duration overnight */
+.reservation.overnight.long-duration {
+  background: linear-gradient(135deg,
+    #0d47a1 0%,
+    #1565c0 25%,
+    #1976d2 50%,
+    #1e88e5 75%,
+    #2196f3 100%
+  );
+  box-shadow:
+    0 6px 20px rgba(13, 71, 161, 0.4),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* User highlight - single clean definition */
+.reservation.user-highlight {
+  animation: userHighlightGradient 3s ease-in-out;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  position: relative;
+}
+
+.reservation.user-highlight::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4caf50, #66bb6a, #81c784, #4caf50);
+  background-size: 400% 400%;
+  border-radius: 10px;
+  z-index: -1;
+  animation: gradientShift 2s ease-in-out infinite;
+}
+
+/* Hover effects for all reservation types */
+.reservation:not(.reserved):not(.overnight):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Improved machine names header styling */
+.machine-names {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5em;
+  padding: 0.5em 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.time-slot-name {
+  flex: 3;
+  text-align: left;
+  font-weight: 600;
+  color: #81d4fa;
+}
+
+.machine-name {
+  flex: 4;
+  text-align: center;
+  font-weight: 500;
+  color: #b0bec5;
+  font-size: 0.95em;
+}
+
+/* Layout helpers */
+.center {
+  text-align: center;
+}
+
+.padding {
+  padding: 10px 10px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.date-navigation {
+  display: flex;
+  align-items: center;
+  margin-bottom: -10px;
+}
+
+mat-form-field.full-width {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+/* Enhanced date navigation styling */
+.date-navigation button {
+  margin: 0 10px;
+  background: linear-gradient(135deg, #424242 0%, #616161 100%);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.date-navigation button:hover {
+  background: linear-gradient(135deg, #616161 0%, #757575 100%);
+  transform: translateY(-1px);
+}
+
+.in-the-middle {
+  position: fixed;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.notification-section {
+  text-align: center;
+}
+
+.notification-section .hint-text {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9em;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { transform: translate3d(-100%, 0, 0); }
+  100% { transform: translate3d(100%, 0, 0); }
+}
+
+@keyframes userHighlightGradient {
+  0%, 100% {
+    transform: translateZ(0) scale(1);
+    filter: drop-shadow(0 0 0 rgba(76, 175, 80, 0));
+  }
+  25% {
+    transform: translateZ(0) scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(76, 175, 80, 0.6));
+  }
+  50% {
+    transform: translateZ(0) scale(1.08);
+    filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.4));
+  }
+  75% {
+    transform: translateZ(0) scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(76, 175, 80, 0.6));
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  .day-view {
+    padding: 0.5em;
+  }
+
+  .time-slot {
+    padding: 0.5em 0;
+  }
+
+  .reservation {
+    border-radius: 6px;
+    font-size: 0.9em;
+  }
+
+  .reservation.overnight::before {
+    font-size: 0.7em;
+    top: 1px;
+    right: 2px;
+    transform: translateZ(0);
+  }
+
+  .reservation.user-highlight::before {
+    border-radius: 8px;
+  }
+}

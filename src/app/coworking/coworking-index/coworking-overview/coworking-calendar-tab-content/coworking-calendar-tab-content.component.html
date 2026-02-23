@@ -1,0 +1,164 @@
+<div class="center padding date-navigation">
+  <button mat-icon-button (click)="previousDate()">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <mat-form-field class="full-width">
+    <input matInput [matDatepicker]="picker" placeholder="Datum auswählen" [formControl]="date1"
+           (dateInput)="onDateChange($event)">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker touchUi></mat-datepicker>
+  </mat-form-field>
+  <button mat-icon-button (click)="nextDate()">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</div>
+
+<mat-tab-group>
+  <mat-tab label="Coworking 1">
+    @if (coworkingTables) {
+      <!-- Nachtreservierungen Banner - OBEN, nur wenn Reservierungen vorhanden -->
+      @if (hasNightReservations('coworking1')) {
+        <div class="night-reservations-banner">
+          <div class="night-banner-header">
+            <div class="night-header-left">
+              <mat-icon class="night-icon">bedtime</mat-icon>
+              <span class="night-title">{{ getNightBannerTitle() }}</span>
+            </div>
+          </div>
+
+          <div class="night-reservations-list">
+            @for (item of getNightReservationsForLocation('coworking1'); track item.table.id) {
+              <div class="night-reservation-item">
+                <div class="night-table-name">{{ item.table.name }}</div>
+                @for (reservation of item.reservations; track reservation.id) {
+                  <div class="night-reservation-badge" (click)="handleNightReservationClick(reservation)">
+                    <span class="night-user">{{ reservation.user }}</span>
+                    <span class="night-time">{{ formatNightTimeRange(reservation) }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="day-view">
+        <div class="machine-names">
+          <div class="time-slot-name"></div>
+          @for (table of coworkingTables; track trackByTableId($index, table)) {
+            @if (isCoworking1(table)) {
+              <div class="machine-name" (click)="openTableImageDialog(table)">
+                {{ table.name }}
+              </div>
+            }
+          }
+        </div>
+        <div class="time-slots">
+          @for (hour of hours; track trackByHour($index, hour)) {
+            <div class="time-slot">
+              <div class="time">{{ hour }}:00 - {{ hour + 1 }}:00</div>
+              <div class="machine-reservations">
+                @for (table of coworkingTables; track trackByTableId($index, table)) {
+                  @if (isCoworking1(table)) {
+                    <div class="machine-reservation"
+                         (click)="handleCoworkingTableSlotClick(table, table.name, hour)">
+                      @if (getReservationForCoworkingTable(table, hour)) {
+                        <div class="reservation"
+                             [ngClass]="{'reserved': getReservationForCoworkingTable(table, hour)?.user !== 'Frei'}">
+                          {{ getReservationForCoworkingTable(table, hour)?.user }}
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Button zum Erstellen - UNTEN -->
+      <div class="night-create-section">
+        <button mat-raised-button color="accent" class="night-create-button"
+                (click)="openNightReservationDialog('coworking1')">
+          <mat-icon>bedtime</mat-icon>
+          {{ getNightButtonText() }}
+        </button>
+      </div>
+    }
+  </mat-tab>
+
+  <mat-tab label="Atelier">
+    @if (coworkingTables) {
+      <!-- Nachtreservierungen Banner - OBEN, nur wenn Reservierungen vorhanden -->
+      @if (hasNightReservations('atelier')) {
+        <div class="night-reservations-banner">
+          <div class="night-banner-header">
+            <div class="night-header-left">
+              <mat-icon class="night-icon">bedtime</mat-icon>
+              <span class="night-title">{{ getNightBannerTitle() }}</span>
+            </div>
+          </div>
+
+          <div class="night-reservations-list">
+            @for (item of getNightReservationsForLocation('atelier'); track item.table.id) {
+              <div class="night-reservation-item">
+                <div class="night-table-name">{{ item.table.name }}</div>
+                @for (reservation of item.reservations; track reservation.id) {
+                  <div class="night-reservation-badge" (click)="handleNightReservationClick(reservation)">
+                    <span class="night-user">{{ reservation.user }}</span>
+                    <span class="night-time">{{ formatNightTimeRange(reservation) }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="day-view">
+        <div class="machine-names">
+          <div class="time-slot-name"></div>
+          @for (table of coworkingTables; track trackByTableId($index, table)) {
+            @if (isAtelier(table)) {
+              <div class="machine-name" (click)="openTableImageDialog(table)">
+                {{ table.name }}
+              </div>
+            }
+          }
+        </div>
+        <div class="time-slots">
+          @for (hour of hours; track trackByHour($index, hour)) {
+            <div class="time-slot">
+              <div class="time">{{ hour }}:00 - {{ hour + 1 }}:00</div>
+              <div class="machine-reservations">
+                @for (table of coworkingTables; track trackByTableId($index, table)) {
+                  @if (isAtelier(table)) {
+                    <div class="machine-reservation"
+                         (click)="handleCoworkingTableSlotClick(table, table.name, hour)">
+                      @if (getReservationForCoworkingTable(table, hour)) {
+                        <div class="reservation"
+                             [ngClass]="{'reserved': getReservationForCoworkingTable(table, hour)?.user !== 'Frei'}">
+                          {{ getReservationForCoworkingTable(table, hour)?.user }}
+                        </div>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Button zum Erstellen - UNTEN -->
+      <div class="night-create-section">
+        <button mat-raised-button color="accent" class="night-create-button"
+                (click)="openNightReservationDialog('atelier')">
+          <mat-icon>bedtime</mat-icon>
+          {{ getNightButtonText() }}
+        </button>
+      </div>
+    }
+  </mat-tab>
+</mat-tab-group>

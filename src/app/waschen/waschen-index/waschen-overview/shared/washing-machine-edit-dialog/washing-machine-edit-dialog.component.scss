@@ -1,0 +1,51 @@
+.color {
+  color: whitesmoke;
+}
+
+.padding {
+  padding: 10px;
+}
+
+.button-box {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.mat-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.mat-radio-button {
+  margin: 5px 0;
+}
+
+.overnight-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  strong {
+    color: #90caf9;
+  }
+
+  small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8em;
+  }
+}
+
+.overnight-indicator {
+  color: #90caf9;
+  background-color: rgba(25, 118, 210, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 4px solid #1976d2;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}

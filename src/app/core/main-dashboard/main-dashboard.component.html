@@ -1,0 +1,246 @@
+<div appChildRouterPadding>
+  @if (!(isLoggedIn$ | async)) {
+  <button mat-raised-button routerLink="/login">Einloggen</button>
+  }
+  @if (isLoggedIn$ | async) {
+  <h3 class="welcome-greeting">Willkommen {{ userDisplayName$ | async }}!</h3>
+  }
+
+  <!-- New Version Update Notification -->
+  @if ((isLoggedIn$ | async) && (hasUpdate$ | async)) {
+  <div class="update-notification" @fadeInOut>
+    <mat-icon>system_update</mat-icon>
+    <div class="update-content">
+      <span class="update-text">Eine neue Version dieser App ist verfügbar!</span>
+      <div class="update-actions">
+        <button mat-raised-button color="primary" (click)="onUpdateApp()">
+          <mat-icon>refresh</mat-icon>
+          Aktualisieren
+        </button>
+        <button mat-icon-button (click)="onDismissUpdate()" class="dismiss-button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <div class="waschen-trocknen-status">
+    <div class="grid-container">
+      <button mat-raised-button color="primary" (click)="navigateToWashing('dryer')">
+        <mat-icon>wb_sunny</mat-icon>
+        <span>Trocknen</span>
+      </button>
+      <ul class="machines-unordered-list">
+        @for (status of dryerStatus; track status.machineId) {
+        <li class="machine-wrapper" (click)="onMachineClick(status, 'dryer')">
+          <div [class]="'machine-indicator ' + getStatusClass(status)"></div>
+          @if (status.busyUntil) {
+          <span class="busy-until-text">Frei: {{ formatTime(status.busyUntil) }}</span>
+          }
+        </li>
+        }
+      </ul>
+    </div>
+    <div class="grid-container">
+      <button mat-raised-button color="primary" (click)="navigateToWashing('washing')">
+        <mat-icon>local_laundry_service</mat-icon>
+        <span>Waschen</span>
+      </button>
+      <ul class="machines-unordered-list">
+        @for (status of washingMachineStatus; track status.machineId) {
+        <li class="machine-wrapper" (click)="onMachineClick(status, 'washer')">
+          <div [class]="'machine-indicator ' + getStatusClass(status)"></div>
+          @if (status.busyUntil) {
+          <span class="busy-until-text">Frei: {{ formatTime(status.busyUntil) }}</span>
+          }
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+
+  <!-- Meine ausgeliehenen Gegenstände -->
+  @if (myBorrowedItems.length > 0) {
+  <div class="my-borrowed-items" @fadeInOut>
+    <div class="borrowed-header" (click)="navigateToHaushalt()">
+      <mat-icon>shopping_bag</mat-icon>
+      <span>Meine Ausleihen</span>
+      <span class="badge">{{ myBorrowedItems.length }}</span>
+    </div>
+
+    <div class="borrowed-list">
+      @for (item of myBorrowedItems; track item.id) {
+      <div class="borrowed-item" (click)="onBorrowedItemClick(item)">
+        <mat-icon class="item-icon">{{ getItemIcon(item) }}</mat-icon>
+        <div class="item-info">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-since">seit {{ item.borrowedAt | date:'dd.MM.' }}</span>
+        </div>
+        <button mat-icon-button class="return-button" (click)="onQuickReturn(item, $event)" matTooltip="Zurückgeben">
+          <mat-icon>assignment_return</mat-icon>
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Coworking Status -->
+  <div class="coworking-status">
+    <button mat-raised-button color="primary" class="coworking-button" (click)="navigateToCoworking()">
+      <mat-icon>desktop_mac</mat-icon>
+      <span>Coworking</span>
+    </button>
+
+    @if (coworkingStatus.length === 0) {
+    <div class="coworking-loading">...</div>
+    } @else {
+    <div class="coworking-desks">
+      @for (table of coworkingStatus; track table.tableId) {
+      <div class="desk-wrapper" [class.occupied]="!table.isFree" (click)="onDeskClick(table)">
+        @if (!table.isFree && table.occupantName) {
+        <div class="occupant-bubble">
+          {{ table.occupantName }}
+        </div>
+        }
+        <div class="desk-icon">
+          @if (table.isFree) {
+          <mat-icon class="desk-free">computer</mat-icon>
+          <span class="desk-label free">frei</span>
+          } @else {
+          <mat-icon class="desk-occupied">person</mat-icon>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- NUR zeigen wenn ALLE belegt sind -->
+    @if (getOccupiedCount() === coworkingStatus.length) {
+    <div class="coworking-mood">
+      <span>Volle Hütte! 🎉</span>
+    </div>
+    }
+    }
+  </div>
+
+  <!-- Show spinner when loading -->
+  @if (isLoading) {
+  <div class="spinner-container" @fadeInOut>
+    <mat-spinner [diameter]="60"></mat-spinner>
+  </div>
+  }
+
+  <!-- Display events only when data is loaded, user allows it, and there are events -->
+  @if (!isLoading && upcomingEvents.length > 0) {
+  <div class="public-events" @fadeInOut>
+    <h3>Veranstaltungen und Reservierungen</h3>
+    <div class="event-list">
+      @for (event of upcomingEvents; track event.id) {
+      <div class="event" [ngClass]="{
+         'event-active': event.isInProgress,
+         'event-today': event.isToday && !event.isInProgress && !event.isFinished,
+         'event-finished': event.isFinished,
+         'event-private': event.isPrivate,
+         'event-clickable': (userDisplayName$ | async) && event.userId === (currentUserId$ | async)
+       }" (click)="onReservationClick(event)"
+        [style.cursor]="(userDisplayName$ | async) && event.userId === (currentUserId$ | async) ? 'pointer' : 'default'">
+        <div class="event-date">
+          @if (event.isPrivate) {
+          <span class="private-label">PRIVAT</span>
+          }
+          @if (event.isFinished) {
+          <span class="finished-label">BEENDET</span>
+          } @else if (event.isInProgress) {
+          <span class="active-now-label">JETZT</span>
+          } @else if (event.isToday && !event.isInProgress && !event.isFinished) {
+          <span class="today-label">HEUTE</span>
+          }
+          {{ event.formattedTimeRange }} Uhr
+        </div>
+        <div class="event-name"
+          [ngClass]="{'with-actions': (userDisplayName$ | async) && event.userId === (currentUserId$ | async)}">
+          @if (event.isGoogleCalendarEvent) {
+          <mat-icon>event</mat-icon>
+          } @else if (event.isBirthday) {
+          <mat-icon class="birthday-icon">cake</mat-icon>
+          } @else {
+          <mat-icon>label</mat-icon>
+          }
+          <div class="event-title-wrapper">
+            <span class="event-title">{{ event.eventName }}</span>
+          </div>
+
+          @if ((userDisplayName$ | async) && event.userId === (currentUserId$ | async)) {
+          <div class="action-buttons">
+            <button mat-icon-button class="delete-button" (click)="onDeleteReservation($event, event)"
+              [title]="'Reservierung löschen'">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          }
+        </div>
+        <div class="event-room">
+          <mat-icon>location_on</mat-icon>
+          {{ event.roomName }}
+          <span class="creator-badge">{{ event.creatorName | firstName }}</span>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  @if (!isLoading && upcomingEvents.length === 0) {
+  <div class="no-events" @fadeInOut>
+    <mat-icon>event_busy</mat-icon>
+    <p>Keine Veranstaltungen diese Woche.</p>
+  </div>
+  }
+
+  <div class="mobility-status">
+    <app-mobility-dashboard-card></app-mobility-dashboard-card>
+  </div>
+
+</div>
+
+<!--<h4 class="holiday-greeting"></h4>-->
+<!--<div class="snowflakes" aria-hidden="true">-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--  <div class="snowflake">-->
+<!--    <div class="inner">❅</div>-->
+<!--  </div>-->
+<!--</div>-->

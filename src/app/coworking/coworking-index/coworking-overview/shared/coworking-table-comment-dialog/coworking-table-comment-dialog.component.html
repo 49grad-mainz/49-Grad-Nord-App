@@ -1,0 +1,14 @@
+<div class="dialog-content">
+  <button mat-icon-button class="close-button" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <h2>Kommentar</h2>
+  <div class="comment-section">
+    <p>{{ data.comment }}</p>
+    @if (!data.comment) {
+      <p class="no-comment">Kein Kommentar vorhanden</p>
+    }
+  </div>
+
+</div>

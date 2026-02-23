@@ -1,0 +1,30 @@
+<mat-tab-group dynamicHeight>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>calendar_month</mat-icon>
+    </ng-template>
+    <app-washing-calendar-tab-content></app-washing-calendar-tab-content>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>settings</mat-icon>
+    </ng-template>
+    <div class="settings-tab-content">
+      <h3>Einstellungen</h3>
+      <div class="setting-item">
+        <mat-slide-toggle [(ngModel)]="enableReservationScroll" (change)="updateReservationScrollSetting()">
+          Automatisch zu meinen Reservierungen scrollen
+        </mat-slide-toggle>
+        <p class="setting-description">
+          Wenn aktiviert, wird automatisch zu deiner ersten kommenden Reservierung gescrollt.
+        </p>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>info</mat-icon>
+    </ng-template>
+    <app-wash-dry-summary-tab></app-wash-dry-summary-tab>
+  </mat-tab>
+</mat-tab-group>

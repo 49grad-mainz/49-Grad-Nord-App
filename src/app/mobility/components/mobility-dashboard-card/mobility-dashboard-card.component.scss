@@ -1,0 +1,194 @@
+.mobility-card {
+    background: #333; // Dark background requested
+    color: #fff; // Light text
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .icon-wrapper {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1); // Translucent light on dark
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff; // White icon
+    }
+
+    .title {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+
+            span {
+                font-weight: 400;
+                color: #aaa; // Lighter grey for chevron
+                margin-left: 2px;
+            }
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-badge {
+            font-size: 13px;
+            font-weight: 500;
+
+            &.green {
+                color: #81c784;
+            }
+
+            &.yellow {
+                color: #ffb74d;
+            }
+
+            &.red {
+                color: #e57373;
+            }
+        }
+
+        .occupant-name {
+            font-size: 13px;
+            color: #40c4ff;
+            font-weight: 500;
+        }
+    }
+}
+
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.timeline-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #bbb; // Light grey labels
+    padding: 0 2px; // Align slightly with lines
+}
+
+.timeline-track {
+    position: relative;
+    height: 16px;
+    background: #444; // Darker track
+    border-radius: 8px;
+    overflow: visible; // Allow marker dot to overflow if needed
+
+    .ruler-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: #666; // Subtle lines
+    }
+
+    .timeline-block {
+        position: absolute;
+        height: 100%;
+        border-radius: 4px;
+        cursor: pointer; // Clickable
+
+        &.busy {
+            background: #9e9e9e; // Light grey block to stand out
+            background-image: linear-gradient(45deg, rgba(0, 0, 0, .15) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, .15) 50%, rgba(0, 0, 0, .15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem;
+        }
+
+        .occupant-bubble {
+            position: absolute;
+            bottom: 120%; // Place above the block
+            left: 50%;
+            transform: translateX(-50%);
+            background: #40c4ff; // Light blue accent
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+
+            // Animation
+            animation: fadeIn 0.2s ease-out;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -4px;
+                border-width: 4px;
+                border-style: solid;
+                border-color: #40c4ff transparent transparent transparent;
+            }
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translate(-50%, 5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+
+    .current-time-marker {
+        position: absolute;
+        top: -4px;
+        bottom: -4px;
+        width: 2px;
+        background: #ef5350; // Red indicator
+        z-index: 2;
+
+        .dot {
+            position: absolute;
+            top: -2px;
+            left: -3px;
+            width: 8px;
+            height: 8px;
+            background: #ef5350;
+            border-radius: 50%;
+        }
+    }
+}
+
+.card-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+
+    .return-btn {
+        width: 100%;
+        border-radius: 8px;
+    }
+}

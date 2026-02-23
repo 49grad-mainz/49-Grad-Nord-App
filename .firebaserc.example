@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "DEINE_FIREBASE_PROJEKT_ID": {
+      "hosting": {
+        "dein-hosting-target": [
+          "dein-hosting-target"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "DEINE_FIREBASE_PROJEKT_ID"
+  }
+}

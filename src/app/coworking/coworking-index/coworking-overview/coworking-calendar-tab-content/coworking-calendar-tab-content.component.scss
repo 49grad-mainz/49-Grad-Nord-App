@@ -1,0 +1,524 @@
+/* Modern coworking calendar styling */
+.day-view {
+  width: 100%;
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+.time-slots {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1em 0;
+  transition: all 0.3s ease;
+}
+
+.time {
+  flex: 1;
+  text-align: left;
+  color: #b0bec5;
+  font-weight: 500;
+}
+
+.machine-reservations {
+  flex: 4;
+  display: flex;
+}
+
+/* Subtle border improvements for better visual separation */
+.machine-reservation {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+/* Modern reservation styling */
+.reservation {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  /* Default free slot - modern blue-grey gradient */
+  background: linear-gradient(135deg, #607d8b 0%, #78909c 100%);
+  color: #ffffff;
+  border: 1px solid rgba(96, 125, 139, 0.3);
+}
+
+/* Reserved slots - modern muted yellow gradient */
+.reservation.reserved {
+  background: linear-gradient(135deg, #f4e4bc 0%, #f0d98d 50%, #e8c547 100%);
+  color: #2e2e2e;
+  border: 1px solid rgba(244, 228, 188, 0.4);
+  box-shadow: 0 3px 10px rgba(244, 228, 188, 0.25);
+  font-weight: 600;
+}
+
+.reservation.reserved:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 228, 188, 0.35);
+}
+
+/* Hover effects for free slots */
+.reservation:not(.reserved):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Improved machine names header styling */
+.machine-names {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5em;
+  padding: 0.5em 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.time-slot-name {
+  flex: 3;
+  text-align: left;
+  font-weight: 600;
+  color: #81d4fa;
+}
+
+.machine-name {
+  flex: 4;
+  text-align: center;
+  font-weight: 500;
+  color: #b0bec5;
+  font-size: 0.95em;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #81d4fa;
+    transform: translateY(-1px);
+  }
+
+  &:after {
+    content: 'ⓘ';
+    margin-left: 5px;
+    color: #64b5f6;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+  }
+
+  &:hover:after {
+    color: #42a5f5;
+  }
+}
+
+/* Night Reservations Banner Styling */
+.night-reservations-banner {
+  background: linear-gradient(135deg,
+    rgba(63, 81, 181, 0.15) 0%,
+    rgba(48, 63, 159, 0.1) 100%
+  );
+  border: 2px solid rgba(63, 81, 181, 0.3);
+  border-radius: 12px;
+  padding: 1.2em;
+  margin: 1em;
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+  animation: nightPulse 2s ease-in-out infinite;
+}
+
+@keyframes nightPulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+  }
+  50% {
+    box-shadow: 0 6px 16px rgba(63, 81, 181, 0.35);
+  }
+}
+
+.night-banner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  padding-bottom: 0.8em;
+  border-bottom: 1px solid rgba(129, 212, 250, 0.2);
+}
+
+.night-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+
+.night-add-button {
+  background: linear-gradient(135deg, #7e57c2 0%, #9575cd 100%) !important;
+  box-shadow: 0 3px 8px rgba(126, 87, 194, 0.4);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(126, 87, 194, 0.6);
+  }
+
+  mat-icon {
+    color: white;
+  }
+}
+
+.night-icon {
+  color: #7e57c2;
+  font-size: 1.8em;
+  width: 1.8em;
+  height: 1.8em;
+  animation: moonGlow 3s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(126, 87, 194, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(126, 87, 194, 0.8));
+  }
+}
+
+.night-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #b39ddb;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.night-reservations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+
+.night-reservation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.8em;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.night-table-name {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #90caf9;
+  margin-bottom: 0.3em;
+}
+
+.night-reservation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.6em 1em;
+  background: linear-gradient(135deg,
+    rgba(126, 87, 194, 0.2) 0%,
+    rgba(94, 53, 177, 0.15) 100%
+  );
+  border: 1px solid rgba(126, 87, 194, 0.4);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(126, 87, 194, 0.4);
+    background: linear-gradient(135deg,
+      rgba(126, 87, 194, 0.3) 0%,
+      rgba(94, 53, 177, 0.25) 100%
+    );
+  }
+}
+
+.night-user {
+  font-weight: 600;
+  color: #ce93d8;
+  font-size: 0.95em;
+}
+
+.night-time {
+  color: #b39ddb;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+/* Empty State für Nachtreservierungen */
+.night-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2em;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.night-empty-icon {
+  font-size: 3em;
+  width: 1.5em;
+  height: 1.5em;
+  color: #7e57c2;
+  margin-bottom: 0.5em;
+  opacity: 0.6;
+}
+
+.night-empty-state p {
+  margin: 0.3em 0;
+  color: #b39ddb;
+}
+
+.night-empty-hint {
+  font-size: 0.9em;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Night Create Section - am unteren Rand */
+.night-create-section {
+  display: flex;
+  justify-content: center;
+  padding: 2em 1em;
+  background: linear-gradient(135deg,
+    rgba(63, 81, 181, 0.08) 0%,
+    rgba(48, 63, 159, 0.05) 100%
+  );
+  border-top: 2px solid rgba(63, 81, 181, 0.2);
+}
+
+.night-create-button {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 1em 2em !important;
+  font-size: 1.05em !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, #7e57c2 0%, #9575cd 100%) !important;
+  color: white !important;
+  border-radius: 24px !important;
+  box-shadow: 0 4px 12px rgba(126, 87, 194, 0.3) !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(126, 87, 194, 0.5) !important;
+    background: linear-gradient(135deg, #9575cd 0%, #b39ddb 100%) !important;
+  }
+
+  mat-icon {
+    font-size: 1.3em;
+    width: 1.3em;
+    height: 1.3em;
+  }
+}
+
+/* Layout helpers */
+.center {
+  text-align: center;
+}
+
+.padding {
+  padding: 10px 10px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.date-navigation {
+  display: flex;
+  align-items: center;
+  margin-bottom: -10px;
+}
+
+mat-form-field.full-width {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+/* Enhanced date navigation styling */
+.date-navigation button {
+  margin: 0 10px;
+  background: linear-gradient(135deg, #424242 0%, #616161 100%);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.date-navigation button:hover {
+  background: linear-gradient(135deg, #616161 0%, #757575 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.in-the-middle {
+  position: fixed;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.table-image {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Tab group enhancements */
+mat-tab-group {
+  background: linear-gradient(135deg,
+    rgba(66, 66, 66, 0.15) 0%,
+    rgba(97, 97, 97, 0.05) 100%
+  );
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  .day-view {
+    padding: 0.5em;
+  }
+
+  .time-slot {
+    padding: 0.5em 0;
+  }
+
+  .reservation {
+    border-radius: 6px;
+    font-size: 0.9em;
+  }
+
+  .machine-name {
+    font-size: 0.85em;
+
+    &:after {
+      font-size: 1em;
+      margin-left: 3px;
+    }
+  }
+
+  .table-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  .night-reservations-banner {
+    padding: 0.8em;
+    margin: 0.5em;
+  }
+
+  .night-banner-header {
+    gap: 0.5em;
+  }
+
+  .night-icon {
+    font-size: 1.4em;
+    width: 1.4em;
+    height: 1.4em;
+  }
+
+  .night-title {
+    font-size: 0.95em;
+  }
+
+  .night-reservation-badge {
+    padding: 0.5em 0.8em;
+    gap: 0.5em;
+  }
+
+  .night-user, .night-time {
+    font-size: 0.85em;
+  }
+}
+
+/* Enhanced loading state */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  background: linear-gradient(135deg,
+    rgba(96, 125, 139, 0.1) 0%,
+    rgba(120, 144, 156, 0.05) 100%
+  );
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+/* Subtle animations */
+.reservation {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Modern tab styling */
+::ng-deep .mat-mdc-tab-group {
+  .mat-mdc-tab-labels {
+    background: linear-gradient(135deg,
+      rgba(66, 66, 66, 0.8) 0%,
+      rgba(97, 97, 97, 0.6) 100%
+    );
+    border-radius: 8px 8px 0 0;
+  }
+
+  .mat-mdc-tab-label {
+    color: #b0bec5 !important;
+    font-weight: 500;
+
+    &.mdc-tab--active {
+      color: #81d4fa !important;
+    }
+  }
+
+  .mat-mdc-tab-body-content {
+    background: linear-gradient(135deg,
+      rgba(66, 66, 66, 0.05) 0%,
+      rgba(97, 97, 97, 0.02) 100%
+    );
+    border-radius: 0 0 8px 8px;
+    padding: 0;
+  }
+}

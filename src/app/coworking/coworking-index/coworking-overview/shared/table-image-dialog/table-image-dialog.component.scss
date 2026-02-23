@@ -1,0 +1,22 @@
+.dialog-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  width: 100%;      /* Ensure the dialog content fills the full width */
+}
+
+.table-image-popup {
+  width: 100%;      /* Image takes the full width */
+  height: auto;     /* Let the height adjust naturally */
+  max-width: 100%;  /* Ensure it doesn't exceed the viewport width */
+  object-fit: contain;  /* Maintain the image aspect ratio */
+}
+
+.full-width-dialog .mat-dialog-container {
+  padding: 0;  /* Remove padding */
+  max-width: 100%;  /* Ensure the container takes full width */
+  height: auto;  /* Let the container height adjust based on content */
+  margin: 0;  /* Remove margins */
+  border-radius: 8px; /* Optional rounded corners */
+}

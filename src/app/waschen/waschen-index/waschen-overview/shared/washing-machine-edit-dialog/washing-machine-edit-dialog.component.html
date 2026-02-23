@@ -1,0 +1,84 @@
+<div class="padding color">
+  <h3>Bearbeiten deiner Reservierung</h3>
+
+  @if (!isEditing) {
+    <!-- Display mode -->
+    <p><strong>Startzeit:</strong> {{ reservation.startTime | date: 'dd.MM.yyyy HH:mm' }}</p>
+    <p><strong>Endzeit:</strong> {{ reservation.endTime | date: 'dd.MM.yyyy HH:mm' }}</p>
+    <p><strong>Dauer:</strong> {{ getDisplayDuration() }}</p>
+    @if (isOvernightReservation) {
+      <p class="overnight-indicator"><strong>🌙 Übernacht-Reservierung</strong></p>
+    }
+    <p><strong>Kommentar:</strong> {{ reservation.comment || 'Kein Kommentar' }}</p>
+    <p><strong>Wäsche darf entnommen werden:</strong> {{ reservation.othersMayRemoveMyClothes ? 'Ja' : 'Nein' }}</p>
+
+    <div class="button-box">
+      <button mat-raised-button color="warn" [disabled]="isDeleting" (click)="deleteReservation()">Löschen</button>
+      <button mat-raised-button color="primary" [disabled]="isDeleting" (click)="enableEditing()">Bearbeiten</button>
+    </div>
+  } @else {
+    <!-- Edit mode -->
+    <div>
+      <mat-form-field>
+        <mat-label>Startdatum</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" [formControl]="startDateControl" [min]="minDate">
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field>
+        <mat-label>Startzeit</mat-label>
+        <mat-select [formControl]="startTimeControl" (selectionChange)="onStartTimeChange()">
+          @for (time of availableTimes; track time) {
+            <mat-option [value]="time">{{time}}:00</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <p>Für wie lange?</p>
+      <mat-radio-group [formControl]="durationControl">
+        @for (hour of hours; track hour) {
+          <mat-radio-button [value]="hour">{{hour}} Stunden</mat-radio-button>
+        }
+        @if (canShowOvernightOption) {
+          <mat-radio-button value="overnight">
+            <span class="overnight-option">
+              <strong>Über Nacht laufen lassen</strong>
+              <small>(bis 9:00 Uhr am nächsten Tag)</small>
+            </span>
+          </mat-radio-button>
+        }
+      </mat-radio-group>
+    </div>
+
+    <div>
+      <mat-checkbox [formControl]="othersMayRemoveControl">Andere dürfen Wäsche entnehmen</mat-checkbox>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Kommentar</mat-label>
+      <mat-select [formControl]="commentTypeControl" (selectionChange)="onCommentChange($event.value)">
+        @for (option of commentOptions; track option) {
+          <mat-option [value]="option">{{option}}</mat-option>
+        }
+        <mat-option value="custom">Andere...</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    @if (commentTypeControl.value === 'custom') {
+      <mat-form-field>
+        <mat-label>Eigener Kommentar</mat-label>
+        <input matInput [formControl]="customCommentControl">
+      </mat-form-field>
+    }
+
+    <div class="button-box">
+      <button mat-raised-button color="warn" [disabled]="isSaving" (click)="cancelEditing()">Abbrechen</button>
+      <button mat-raised-button color="primary" [disabled]="isSaving" (click)="saveReservation()">Speichern</button>
+    </div>
+  }
+</div>

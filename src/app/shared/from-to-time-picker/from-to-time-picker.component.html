@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Wähle Datum und Zeit</h2>
+<mat-dialog-content>
+  <div class="date-time-fields">
+    <!-- Date Picker -->
+    <mat-form-field class="full-width">
+      <mat-label>Datum auswählen</mat-label>
+      <input matInput [matDatepicker]="datePicker" [formControl]="dateControl"
+        [matDatepickerFilter]="filterDates" required readonly
+        (click)="datePicker.open()">
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+      @if (dateControl.invalid) {
+        <mat-error>Bitte gültiges Datum auswählen</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Time Picker - Using the official Angular Material TimePicker -->
+    <mat-form-field class="full-width">
+      <mat-label>Zeit auswählen</mat-label>
+      <input matInput [matTimepicker]="timePicker" [formControl]="timeControl" required readonly>
+      <mat-timepicker-toggle matSuffix [for]="timePicker"></mat-timepicker-toggle>
+      <mat-timepicker #timePicker></mat-timepicker>
+      @if (timeControl.invalid) {
+        <mat-error>Bitte gültige Zeit auswählen</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  @if (dateControl.valid && timeControl.valid) {
+    <div class="selected-datetime">
+      <p>Ausgewählter Zeitpunkt: {{formatPreview()}}</p>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Abbrechen</button>
+  <button mat-raised-button color="primary" [disabled]="dateControl.invalid || timeControl.invalid"
+  (click)="onDateTimeSelected()">Bestätigen</button>
+</mat-dialog-actions>

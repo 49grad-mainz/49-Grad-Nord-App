@@ -1,0 +1,39 @@
+.details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 300px;
+    padding-top: 10px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.87);
+
+    mat-icon {
+        color: rgba(255, 255, 255, 0.54);
+    }
+
+    &.comment {
+        align-items: flex-start;
+
+        p {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+    }
+}
+
+// Ensure dialog background fits dark theme (if not global)
+:host {
+    display: block;
+    // Material dialog usually inherits theme, but explicitly ensuring text colors here
+    display: block;
+}
+
+.dialog-actions {
+    gap: 12px;
+}

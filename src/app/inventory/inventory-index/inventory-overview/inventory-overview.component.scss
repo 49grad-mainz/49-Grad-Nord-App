@@ -1,0 +1,364 @@
+.inventory-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ===== HEADER =====
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 32px;
+    font-weight: 500;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+  }
+}
+
+// ===== LOADING =====
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 20px;
+}
+
+// ===== ITEMS GRID =====
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+// ===== ITEM CARD =====
+.item-card {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+  }
+
+  &.borrowed {
+    border-left: 4px solid #ff9800;
+  }
+
+  // ===== STATUS BADGE (Verbessert - Nicht über Bild) =====
+  .status-badge {
+    // Nicht absolute, sondern als erstes Element im Content
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    margin-bottom: 12px;
+    width: fit-content;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    // Verfügbar - Grün
+    &.status-available {
+      background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+      color: white;
+
+      mat-icon {
+        animation: checkPulse 2s ease-in-out infinite;
+      }
+    }
+
+    // Ausgeliehen - Orange
+    &.status-borrowed {
+      background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+      color: white;
+
+      mat-icon {
+        animation: rotate 2s linear infinite;
+      }
+    }
+
+    // Überfällig - Rot
+    &.status-overdue {
+      background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+      color: white;
+      animation: badgePulse 1.5s infinite;
+
+      mat-icon {
+        animation: shake 0.5s ease-in-out infinite;
+      }
+    }
+  }
+
+  @keyframes checkPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes badgePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 3px 10px rgba(244, 67, 54, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 5px 15px rgba(244, 67, 54, 0.6); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+  }
+
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+
+  .item-image {
+    border-radius: 8px;
+    object-fit: cover;
+    width: 180px;
+    height: 110px;
+  }
+
+  mat-card-content {
+    .item-description {
+      color: #ececec;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .divider-spacing {
+      margin: 16px 0;
+    }
+
+    .item-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+
+      .detail-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #e8e8e8;
+
+        .detail-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          color: #f1f1f1;
+        }
+      }
+    }
+
+    .borrower-info {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      border-left: 3px solid #ff9800;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+
+      &.overdue {
+        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        border-left-color: #f44336;
+      }
+
+      .borrower-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        color: #d84315;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        strong {
+          font-size: 14px;
+        }
+      }
+
+      .borrower-details {
+        p {
+          margin: 6px 0;
+          font-size: 13px;
+          color: #555;
+
+          .current-user {
+            font-weight: 600;
+            color: #ff9800;
+          }
+        }
+
+        .overdue-warning {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #d32f2f;
+          font-weight: 600;
+          margin-top: 8px;
+          animation: warningBlink 1.5s infinite;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+
+        .notes {
+          margin-top: 12px;
+          padding: 8px;
+          background: rgba(255,255,255,0.6);
+          border-radius: 4px;
+          font-style: italic;
+        }
+      }
+    }
+
+    @keyframes warningBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .button-container {
+      margin-top: 16px;
+
+      .action-button {
+        width: 100%;
+        height: 44px;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.2s;
+
+        mat-icon {
+          margin-right: 8px;
+        }
+
+        &:not([disabled]):hover {
+          transform: scale(1.02);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        &[disabled] {
+          opacity: 0.6;
+        }
+      }
+
+      .repair-notice {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 8px;
+        background: #ffebee;
+        border-radius: 4px;
+        color: #c62828;
+        font-size: 13px;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+  }
+}
+
+// ===== EMPTY STATE =====
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  color: #999;
+
+  .empty-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: #666;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .inventory-container {
+    padding: 16px;
+  }
+
+  .items-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .item-card {
+    .status-badge {
+      font-size: 11px;
+      padding: 5px 10px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    h2 {
+      font-size: 24px;
+    }
+  }
+}

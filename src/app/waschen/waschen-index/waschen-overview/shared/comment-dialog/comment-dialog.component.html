@@ -1,0 +1,20 @@
+<div class="dialog-content">
+  <button mat-icon-button class="close-button" (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <h2>Kommentar</h2>
+  <div class="comment-section">
+    <p>{{ data.comment }}</p>
+    @if (!data.comment) {
+      <p class="no-comment">Kein Kommentar vorhanden</p>
+    }
+  </div>
+
+  <h2>Berechtigung</h2>
+  <div class="permission-section">
+    <div class="permission-box" [ngClass]="{ 'permission-accent': data.othersMayRemoveMyClothes, 'permission-warn': !data.othersMayRemoveMyClothes }">
+      {{ data.othersMayRemoveMyClothes ? 'Wäsche darf entnommen werden' : 'Wäsche bitte nicht entfernen' }}
+    </div>
+  </div>
+</div>

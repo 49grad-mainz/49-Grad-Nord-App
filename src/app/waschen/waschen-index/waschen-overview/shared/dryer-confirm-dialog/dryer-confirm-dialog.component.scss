@@ -1,0 +1,37 @@
+* {
+  color: whitesmoke;
+}
+
+.padding {
+  padding: 10px;
+}
+
+.button-box {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mat-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.mat-radio-button {
+  margin: 5px 0;
+}
+
+.overnight-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  strong {
+    color: #90caf9;
+  }
+
+  small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8em;
+  }
+}

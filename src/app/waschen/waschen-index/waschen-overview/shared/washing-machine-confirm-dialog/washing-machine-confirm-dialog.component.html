@@ -1,0 +1,54 @@
+<div class="padding">
+  <h1>Waschmaschine gleich reservieren?</h1>
+  <p>Ausgewählte Waschmaschine: {{ data.machineName }}</p>
+  <p>Datum: {{ data.date | date: 'dd.MM.yyyy' }}</p>
+  <p>Ausgewählte Uhrzeit: {{ data.time }}:00 Uhr</p>
+  {{ selectedComment }}
+
+  <div>
+    <p>Für wie lange?</p>
+    <mat-radio-group [formControl]="selectedHours">
+      @for (hour of hours; track hour) {
+      <mat-radio-button [value]="hour">
+        {{ hour }} Stunden
+      </mat-radio-button>
+      }
+      @if (isEveningReservation) {
+      <mat-radio-button value="overnight">
+        <span class="overnight-option">
+          <strong>Über Nacht waschen</strong>
+          <small>(bis 9 Uhr am nächsten Tag)</small>
+        </span>
+      </mat-radio-button>
+      }
+    </mat-radio-group>
+  </div>
+
+  <div>
+    <mat-checkbox [formControl]="othersMayRemoveMyClothes">Andere dürfen Wäsche entnehmen</mat-checkbox>
+  </div>
+
+  <mat-form-field>
+    <mat-label>Kommentar</mat-label>
+    <mat-select [(value)]="selectedComment" (selectionChange)="onCommentChange($event.value)">
+      @for (option of commentOptions; track option) {
+      <mat-option [value]="option">{{ option }}</mat-option>
+      }
+      <mat-option value="custom">Andere...</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  @if (selectedComment === 'custom') {
+  <mat-form-field>
+    <mat-label>Kommentar</mat-label>
+    <input matInput [(ngModel)]="customComment">
+  </mat-form-field>
+  }
+
+  <br>
+  <div class="button-box">
+    <button mat-raised-button color="warn" (click)="onNoClick()">Abbrechen</button>
+    <button mat-raised-button color="primary" [disabled]="isMakingReservation" (click)="onReserve()">Reservieren
+    </button>
+  </div>
+</div>

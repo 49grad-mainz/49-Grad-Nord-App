@@ -1,0 +1,108 @@
+<div class="user-profile" appChildRouterPadding>
+  <h1>Einstellungen</h1>
+
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+    <!-- Tab 1: App Settings -->
+    <mat-tab label="App Einstellungen">
+      <div class="app-settings">
+        <h3>App Einstellungen</h3>
+        <div class="settings-item">
+          <p><strong>Startseite</strong></p>
+        </div>
+
+        <hr>
+
+        <div class="notification-section">
+          <h3>Push-Benachrichtigungen</h3>
+
+          <!-- Status Anzeige -->
+          @if (isNotificationGranted) {
+          <div class="notification-status granted">
+            <mat-icon color="primary">check_circle</mat-icon>
+            <p><strong>Benachrichtigungen sind aktiviert</strong></p>
+            <p class="hint-text">Du erhältst Benachrichtigungen 15 Minuten vor Ablauf deiner Reservierung.</p>
+          </div>
+          }
+
+          @if (isNotificationDenied) {
+          <div class="notification-status denied">
+            <mat-icon color="warn">block</mat-icon>
+            <p><strong>Benachrichtigungen sind blockiert</strong></p>
+            <p class="hint-text">Du hast Benachrichtigungen für diese Website abgelehnt.</p>
+            <button mat-raised-button color="accent" (click)="openNotificationSettings()">
+              <mat-icon>settings</mat-icon>
+              Anleitung zum Aktivieren
+            </button>
+          </div>
+          }
+
+          @if (showNotificationPrompt) {
+          <div class="notification-status default">
+            <mat-icon>notifications_none</mat-icon>
+            <p><strong>Benachrichtigungen nicht aktiviert</strong></p>
+            <button mat-raised-button color="primary" (click)="requestNotificationPermission()">
+              <mat-icon>notifications</mat-icon>
+              Benachrichtigungen aktivieren
+            </button>
+            <p class="hint-text">Aktiviere Benachrichtigungen, um 15 min vor Ablauf der Reservierung benachrichtigt zu
+              werden.</p>
+          </div>
+          }
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: User Profile -->
+    <mat-tab label="Profil Einstellungen">
+      <h3>Du bist eingeloggt als</h3>
+      <div class="user-details">
+        <p><strong>Name: </strong> <span class="user-name">{{ userDisplayName$ | async }}</span></p>
+        <p><strong>E-Mail: </strong> <span class="user-email">{{ userEmailAddress$ | async }}</span></p>
+      </div>
+      <div class="change-name">
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="newName" placeholder="Neuer Name">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="changeName()" [disabled]="isLoading">Namen ändern</button>
+      </div>
+      <div class="change-email">
+        <mat-form-field>
+          <input matInput type="email" [(ngModel)]="newEmail" placeholder="Neue E-Mail-Adresse">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="updateUserEmail()" [disabled]="isLoading">E-Mail ändern
+        </button>
+      </div>
+
+      <!-- Telefonnummer -->
+      <div class="change-phone">
+        <h3>Telefonnummer (Optional)</h3>
+        <p class="hint-text">Wenn du hier deine Nummer hinterlegst, können andere dich bei Fragen zu deiner Reservierung
+          anrufen.</p>
+        <mat-form-field>
+          <input matInput type="tel" [(ngModel)]="phoneNumber" placeholder="Telefonnummer (z.B. +49 123...)">
+          <mat-icon matSuffix>phone</mat-icon>
+        </mat-form-field>
+        <div class="button-row">
+          <button mat-raised-button color="primary" (click)="savePhoneNumber()" [disabled]="isLoading">
+            Speichern
+          </button>
+          @if (phoneNumber) {
+          <button mat-button color="warn" (click)="deletePhoneNumber()" [disabled]="isLoading">
+            Löschen
+          </button>
+          }
+        </div>
+      </div>
+      <hr>
+      <br>
+      <div class="delete-account">
+        <h3>Account löschen</h3>
+        <p>Wenn du deinen Account löschst, werden alle deine Daten bei der App unwiderruflich gelöscht.</p>
+        <p>Falls das Löschen nicht funktioniert, logge dich aus und wieder ein. Danach sollte es funktionieren.</p>
+        <button mat-raised-button color="warn" (click)="confirmAccountDeletion()" [disabled]="isDeletingMyAccount">
+          Account löschen
+        </button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

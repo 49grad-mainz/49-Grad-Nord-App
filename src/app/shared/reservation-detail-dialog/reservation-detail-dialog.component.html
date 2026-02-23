@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>{{ data.reservation.eventName }}</h2>
+
+<mat-dialog-content>
+    <div class="info-row">
+        <mat-icon>location_on</mat-icon>
+        <span>{{ data.roomName }}</span>
+    </div>
+
+    <div class="info-row">
+        <mat-icon>schedule</mat-icon>
+        <span>
+            {{ data.reservation.fromDateTime | date:'dd.MM.yyyy HH:mm' }} -
+            @if (isSameDay(data.reservation.fromDateTime, data.reservation.toDateTime)) {
+            {{ data.reservation.toDateTime | date:'HH:mm' }}
+            } @else {
+            {{ data.reservation.toDateTime | date:'dd.MM.yyyy HH:mm' }}
+            }
+        </span>
+    </div>
+
+    <div class="creator-section">
+        <div class="creator-info">
+            <span class="label">Reserviert von:</span>
+            <span class="value">{{ data.creatorName | firstName }}</span>
+        </div>
+
+        @if (data.creatorPhoneNumber) {
+        <a mat-stroked-button class="call-button" [href]="'tel:' + data.creatorPhoneNumber">
+            <mat-icon>phone</mat-icon>
+            Anrufen
+        </a>
+        }
+    </div>
+
+    @if (!data.creatorPhoneNumber && isContactsApiSupported) {
+    <div class="no-number-contact-search">
+        <p>Keine Nummer hinterlegt.</p>
+        <button mat-stroked-button class="contact-button" (click)="openContactPicker()">
+            <mat-icon>contacts</mat-icon>
+            Telefonbuch öffnen
+        </button>
+    </div>
+    }
+
+    @if (!data.viewerHasPhoneNumber) {
+    <div class="add-number-hint">
+        <mat-icon color="accent">info</mat-icon>
+        <br>
+        <div class="hint-content">
+            <p>Hinterlege deine eigene Nummer, dann wird sie in deinen Reservierungen angezeigt. So können dich andere
+                bei Fragen anrufen.</p>
+            <button mat-raised-button color="accent" (click)="onAddPhoneNumber()">
+                Nummer hinzufügen
+            </button>
+        </div>
+    </div>
+    }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    @if (data.isOwner) {
+    <button mat-button color="warn" (click)="onDelete()">Löschen</button>
+    <button mat-button (click)="onEdit()">Bearbeiten</button>
+    }
+    <button mat-raised-button color="primary" (click)="onClose()">Schließen</button>
+</mat-dialog-actions>

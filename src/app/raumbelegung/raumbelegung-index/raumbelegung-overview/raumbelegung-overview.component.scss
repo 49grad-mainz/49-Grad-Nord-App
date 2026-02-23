@@ -1,0 +1,293 @@
+// Base card styling
+.example-card {
+  width: 100%;
+  margin: 0;
+  background: #2a2a2a;
+}
+
+// Content areas
+mat-card-content {
+  padding: 0;
+  margin: 0;
+}
+
+// Tab group
+mat-tab-group {
+  width: 100%;
+
+  ::ng-deep {
+    .mat-mdc-tab-body-wrapper {
+      padding: 0;
+    }
+
+    .mat-mdc-tab-body-content {
+      padding: 12px;
+    }
+
+    .mat-mdc-tab-header {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+// Form fields
+mat-form-field {
+  width: 100%;
+  display: block;
+  margin-bottom: 16px;
+}
+
+// Von/Bis buttons container
+.button-array {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+
+  button {
+    flex: 1;
+  }
+}
+
+// Toggle and text
+mat-slide-toggle {
+  display: block;
+  margin: 16px 0;
+}
+
+// Text elements
+p {
+  margin: 8px 0;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+// Italic hint text
+i {
+  display: block;
+  margin: 8px 0;
+  font-size: 14px;
+  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+// Add clickable row styles
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &.past-event {
+    opacity: 0.5;
+    filter: grayscale(100%);
+
+    // Ensure hover effect is still visible or maybe distinct for past events
+    &:hover {
+      opacity: 0.7; // Slightly increase opacity on hover to indicate interactivity
+    }
+  }
+}
+
+// Heading styles
+h4 {
+  color: rgba(255, 255, 255, 0.87);
+  margin: 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+// Table styles
+.mat-mdc-table {
+  width: 100%;
+  background: transparent !important;
+  margin: 0;
+
+  // Header styling
+  .mat-mdc-header-cell {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  // Cell styling
+  .mat-mdc-cell {
+    color: rgba(255, 255, 255, 0.87);
+    font-size: 14px;
+    padding: 8px;
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+  }
+
+  // Column specific widths
+  .mat-column-type {
+    width: 48px;
+    padding-right: 0;
+  }
+
+  .mat-column-time {
+    width: 150px;
+  }
+
+  // Icon styling
+  mat-icon {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  // Row hover effect
+  .mat-mdc-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+  }
+}
+
+// Status colors
+.available {
+  background-color: #54945c !important;
+  color: white;
+}
+
+.reserved {
+  background-color: #21adc4 !important;
+  color: white;
+}
+
+// Form area
+.reservation-area {
+  padding: 0;
+}
+
+// Warning display
+.warning {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+  padding: 8px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border-radius: 4px;
+
+  mat-icon {
+    margin-right: 8px;
+    color: #ff4444;
+  }
+}
+
+// DateTime display
+.date-time-display {
+  margin: 16px 0;
+
+  p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.87);
+  }
+}
+
+// Button row
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+
+  button {
+    min-width: 120px;
+  }
+}
+
+// Override Material styles
+::ng-deep {
+
+  // Form field adjustments
+  .mat-mdc-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  // Tab styling
+  .mat-mdc-tab-labels {
+    padding: 0 8px;
+  }
+
+  // Active tab indicator
+  .mat-mdc-tab-header {
+    border-bottom: none;
+
+    .mat-mdc-tab-header-pagination {
+      display: none;
+    }
+  }
+
+  // Tab label colors
+  .mat-mdc-tab {
+    color: rgba(255, 255, 255, 0.7) !important;
+
+    &.mat-mdc-tab-active {
+      color: rgba(255, 255, 255, 1) !important;
+    }
+  }
+}
+
+// Utility classes
+.full-width {
+  width: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+.bit-of-vertical-space-in-divider {
+  margin: 16px 0;
+}
+
+// Updated filter section for button toggle group
+.reservation-filter {
+  margin-bottom: 16px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+
+  //mat-button-toggle-group {
+  //  ::ng-deep {
+  //    // Style the button toggle group for dark theme
+  //    .mat-button-toggle {
+  //      color: rgba(255, 255, 255, 0.7);
+  //      background-color: rgba(255, 255, 255, 0.05);
+  //      border-color: rgba(255, 255, 255, 0.12);
+  //
+  //      &.mat-button-toggle-checked {
+  //        color: rgba(255, 255, 255, 1);
+  //        background-color: rgba(255, 255, 255, 0.1);
+  //      }
+  //
+  //      &:hover {
+  //        background-color: rgba(255, 255, 255, 0.08);
+  //      }
+  //    }
+  //
+  //    .mat-button-toggle-button {
+  //      padding: 8px 16px;
+  //      font-size: 14px;
+  //      min-width: 60px;
+  //    }
+  //  }
+  //}
+}
+
+// Optional: Add some spacing between the toggle and table
+.mat-elevation-z8 {
+  margin-top: 8px;
+}
+
+// Optional: Style for when no reservations are found
+.no-reservations {
+  text-align: center;
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.54);
+  font-style: italic;
+}

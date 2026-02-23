@@ -1,0 +1,98 @@
+<div class="center padding date-navigation">
+  <button mat-icon-button (click)="previousDate()">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <mat-form-field class="full-width">
+    <input matInput [matDatepicker]="picker" placeholder="Datum auswählen" [formControl]="date1"
+           (dateInput)="onDateChange($event)">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker touchUi>
+    </mat-datepicker>
+  </mat-form-field>
+  <button mat-icon-button (click)="nextDate()">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+</div>
+
+<mat-tab-group dynamicHeight
+               (selectedTabChange)="onTabChange($event)"
+               [(selectedIndex)]="selectedTabIndex">
+  >
+  <mat-tab label="Waschen">
+    @if (true) {
+      <div class="day-view">
+        <div class="machine-names">
+          <div class="time-slot-name"></div>
+          @for (machine of washingMachines; track machine.id) {
+            <div class="machine-name">{{ machine.name }}</div>
+          }
+        </div>
+
+        <div class="time-slots">
+          @for (hour of hours; track hour) {
+            <div class="time-slot" [class.current-hour]="isCurrentHour(hour)">
+              <div class="time">{{ hour }}:00 - {{ hour + 1 }}:00</div>
+              <div class="machine-reservations">
+                @for (machine of washingMachines; track machine.id) {
+                  <div class="machine-reservation" (click)="handleWashingMachineSlotClick(machine, machine.name, hour)">
+                    @if (getReservationForWashingMachine(machine, hour)) {
+                      <div class="reservation"
+                           [ngClass]="{
+                          'reserved': getReservationForWashingMachine(machine, hour)?.user !== 'Frei',
+                          'overnight': getReservationForWashingMachine(machine, hour)?.isOvernightReservation,
+                          'evening-free-21': getReservationForWashingMachine(machine, hour)?.user === 'Frei' && hour === 21,
+                          'evening-free-22': getReservationForWashingMachine(machine, hour)?.user === 'Frei' && hour === 22,
+                          'evening-free-23': getReservationForWashingMachine(machine, hour)?.user === 'Frei' && hour === 23,
+                          'user-highlight': highlightUserReservations && isUserReservation(getReservationForWashingMachine(machine, hour))
+                        }">
+                        {{ getReservationForWashingMachine(machine, hour)?.userName }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </mat-tab>
+  <mat-tab label="Trocknen">
+    <div class="day-view">
+      <div class="machine-names">
+        <div class="time-slot-name"></div>
+        @for (dryer of dryers; track dryer.id) {
+          <div class="machine-name">{{ dryer.name }}</div>
+        }
+      </div>
+
+      <div class="time-slots">
+        @for (hour of hours; track hour) {
+          <div class="time-slot" [class.current-hour]="isCurrentHour(hour)">
+            <div class="time">{{ hour }}:00 - {{ hour + 1 }}:00</div>
+            <div class="machine-reservations">
+              @for (dryer of dryers; track dryer.id) {
+                <div class="machine-reservation"
+                     (click)="handleDryerSlotClick(dryer, dryer.name, hour)">
+                  @if (getReservationForDryer(dryer, hour)) {
+                    <div class="reservation"
+                         [ngClass]="{
+                           'reserved': getReservationForDryer(dryer, hour)?.user !== 'Frei',
+                           'overnight': getReservationForDryer(dryer, hour)?.isOvernightReservation,
+                           'evening-free-21': getReservationForDryer(dryer, hour)?.user === 'Frei' && hour === 21,
+                           'evening-free-22': getReservationForDryer(dryer, hour)?.user === 'Frei' && hour === 22,
+                           'evening-free-23': getReservationForDryer(dryer, hour)?.user === 'Frei' && hour === 23,
+                           'user-highlight': highlightUserReservations && isUserDryerReservation(getReservationForDryer(dryer, hour))
+                         }">
+                      {{ getReservationForDryer(dryer, hour)?.userName || getReservationForDryer(dryer, hour)?.user }}
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

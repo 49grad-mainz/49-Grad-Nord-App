@@ -1,0 +1,276 @@
+<div class="container">
+  <mat-tab-group>
+    <!-- Tab 1: Liste & Suche -->
+    <mat-tab label="Im Haushalt">
+      <div class="tab-content">
+        <!-- Suchfeld -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Suche</mat-label>
+          <input
+            matInput
+            [formControl]="searchControl"
+            placeholder="Gegenstand suchen...">
+          <mat-icon matPrefix>search</mat-icon>
+          @if (searchControl.value) {
+            <button
+              matSuffix
+              mat-icon-button
+              (click)="searchControl.setValue('')">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+
+        <!-- Filter -->
+        <div class="filters">
+          <mat-chip-listbox [formControl]="statusFilter">
+            <mat-chip-option value="all">Alle</mat-chip-option>
+            <mat-chip-option value="available">
+              <mat-icon>check_circle</mat-icon>
+              Verfügbar
+            </mat-chip-option>
+            <mat-chip-option value="borrowed">
+              <mat-icon>schedule</mat-icon>
+              Ausgeliehen
+            </mat-chip-option>
+          </mat-chip-listbox>
+
+          <mat-form-field appearance="outline" class="kategorie-select">
+            <mat-label>Kategorie</mat-label>
+            <mat-select [formControl]="categoryFilter">
+              <mat-option value="all">Alle Kategorien</mat-option>
+              @for (category of itemService.categories(); track category) {
+                <mat-option [value]="category">{{ category }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Anzahl -->
+        <p class="count">{{ gefilterteItems().length }} Gegenstände</p>
+
+        <!-- Liste -->
+        <mat-list>
+          @for (item of gefilterteItems(); track item.id) {
+            <mat-list-item
+              (click)="onItemClick(item)"
+              [class.clickable]="true"
+              [class.expanded]="isExpanded(item.id)">
+
+              <mat-icon matListItemIcon>{{ getItemIcon(item) }}</mat-icon>
+
+              <div matListItemTitle>
+                {{ item.name }}
+              </div>
+
+              <div matListItemLine class="info-line">
+                <span class="kategorie">📁 {{ item.category }}</span>
+                <span class="separator">·</span>
+                @if (item.isBorrowed) {
+                  <span class="ausgeliehen">Ausgeliehen</span>
+                } @else {
+                  <span class="verfuegbar">✓ Verfügbar</span>
+                }
+              </div>
+
+              <!-- Tags oder Platzhalter -->
+              @if (item.tags?.length) {
+                <div matListItemLine class="tags">
+                  @for (tag of item.tags; track tag) {
+                    <mat-chip>{{ tag }}</mat-chip>
+                  }
+                </div>
+              } @else {
+                <div matListItemLine class="no-tags">
+                  <span class="subtle">Keine Tags</span>
+                </div>
+              }
+
+              <!-- Erweiterte Info wenn expanded -->
+              @if (isExpanded(item.id)) {
+                <div matListItemLine class="expanded-info">
+                  @if (item.isBorrowed) {
+                    <div class="info-content">
+                      @if (isLoadingUserName(item.borrowedByUserId!)) {
+                        <mat-spinner diameter="16"></mat-spinner>
+                        <span>Lade Namen...</span>
+                      } @else {
+                        <span>👤 {{ getUserNameFromCache(item.borrowedByUserId!) }}</span>
+                        @if (item.borrowedAt) {
+                          <span class="date-info">· seit {{ item.borrowedAt | date:'dd.MM.yyyy' }}</span>
+                        }
+                      }
+                    </div>
+                    <div class="action-buttons">
+                      @if (canReturn(item)) {
+                      <button
+                        mat-raised-button
+                        color="accent"
+                        class="action-button"
+                        (click)="returnItem(item, $event)">
+                        <mat-icon>assignment_return</mat-icon>
+                        Zurückgeben
+                      </button>
+                      }
+                      @if (canDelete(item)) {
+                        <button
+                          mat-icon-button
+                          color="warn"
+                          class="delete-button"
+                          (click)="deleteItem(item, $event)"
+                          matTooltip="Gegenstand löschen">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      }
+                    </div>
+                  } @else {
+                    <div class="info-content">
+                      @if (item.description) {
+                        <span class="description-text">{{ item.description }}</span>
+                      } @else {
+                        <span>keine Beschreibung vorhanden</span>
+                      }
+                    </div>
+                    <div class="action-buttons">
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        class="action-button"
+                        (click)="borrowItem(item, $event)">
+                        <mat-icon>shopping_cart</mat-icon>
+                        Ausleihen
+                      </button>
+                      @if (canDelete(item)) {
+                        <button
+                          mat-icon-button
+                          color="warn"
+                          class="delete-button"
+                          (click)="deleteItem(item, $event)"
+                          matTooltip="Gegenstand löschen">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+            </mat-list-item>
+          } @empty {
+            <div class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <p>Keine Gegenstände gefunden</p>
+            </div>
+          }
+        </mat-list>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: Neues Item hinzufügen -->
+    <mat-tab label="Hinzufügen">
+      <div class="tab-content">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Gegenstand hinzufügen</mat-card-title>
+            <mat-card-subtitle>
+              Füge einen neuen Gegenstand zum Gemeinschafts-Inventar hinzu.
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <form [formGroup]="itemForm" class="item-form">
+
+              <!-- Name (Pflichtfeld) -->
+              <mat-form-field appearance="outline">
+                <mat-label>Name *</mat-label>
+                <input
+                  matInput
+                  formControlName="name"
+                  placeholder="z.B. Bohrmaschine, Beamer, Leiter">
+                @if (itemForm.get('name')?.hasError('required') && itemForm.get('name')?.touched) {
+                  <mat-error>Name ist erforderlich</mat-error>
+                }
+                @if (itemForm.get('name')?.hasError('minlength') && itemForm.get('name')?.touched) {
+                  <mat-error>Mindestens 3 Zeichen</mat-error>
+                }
+              </mat-form-field>
+
+              <!-- Kategorie (Pflichtfeld) -->
+              <mat-form-field appearance="outline">
+                <mat-label>Kategorie *</mat-label>
+                <mat-select formControlName="category">
+                  @for (cat of itemService.predefinedCategories; track cat) {
+                    <mat-option [value]="cat">{{ cat }}</mat-option>
+                  }
+                </mat-select>
+                @if (itemForm.get('category')?.hasError('required') && itemForm.get('category')?.touched) {
+                  <mat-error>Kategorie ist erforderlich</mat-error>
+                }
+              </mat-form-field>
+
+              <!-- Beschreibung (Optional) -->
+              <mat-form-field appearance="outline">
+                <mat-label>Beschreibung</mat-label>
+                <textarea
+                  matInput
+                  formControlName="description"
+                  rows="3"
+                  placeholder="Optionale Beschreibung..."></textarea>
+              </mat-form-field>
+
+              <!-- Tags mit Chips (Optional) -->
+              <mat-form-field appearance="outline">
+                <mat-label>Tags</mat-label>
+                <mat-chip-grid #chipGrid aria-label="Tags eingeben">
+                  @for (tag of tags(); track tag) {
+                    <mat-chip-row (removed)="removeTag(tag)">
+                      {{ tag }}
+                      <button matChipRemove [attr.aria-label]="'Tag ' + tag + ' entfernen'">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-chip-row>
+                  }
+                </mat-chip-grid>
+                <input
+                  placeholder="Neuer Tag..."
+                  [matChipInputFor]="chipGrid"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="addTag($event)"/>
+                <mat-hint>Enter oder Komma zum Hinzufügen</mat-hint>
+              </mat-form-field>
+
+              <!-- Foto Upload (später) -->
+              <div class="foto-upload">
+                <button mat-stroked-button type="button" disabled>
+                  <mat-icon>camera_alt</mat-icon>
+                  Foto hinzufügen (später mit KI-Erkennung)
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="itemForm.invalid || isSubmitting()"
+              (click)="addNewItem()">
+              @if (isSubmitting()) {
+                <mat-spinner diameter="20"></mat-spinner>
+                Speichern...
+              } @else {
+                Speichern
+              }
+            </button>
+            <button
+              mat-button
+              [disabled]="isSubmitting()"
+              (click)="cancelAdd()">
+              Abbrechen
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

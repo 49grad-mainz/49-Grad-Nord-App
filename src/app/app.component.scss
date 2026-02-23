@@ -1,0 +1,188 @@
+@use '@angular/material' as mat;
+
+.my-class-with-default-shadow {
+  // Adds a shadow for elevation level 2 with default color and full opacity:
+  @include mat.elevation(2);
+}
+
+.my-class-with-custom-shadow {
+  position: relative;
+  // Adds a shadow for elevation level 2 with color #e91e63 and 80% of the default opacity:
+  //@include mat.elevation(2, black, 0.8);
+  -webkit-box-shadow: 0 5px 10px -3px rgba(0,0,0,0.54);
+  -moz-box-shadow: 0 5px 10px -3px rgba(0,0,0,0.54);
+  box-shadow: 0 5px 10px -3px rgba(0,0,0,0.54);
+  z-index: 1111111;
+}
+.spacer {
+  width: 100%;
+}
+
+.broad-footer-button {
+  width: 50px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  z-index: 100;
+}
+
+.sidenav-content-desktop {
+  height: calc(100vh - 128px);
+}
+
+.sidenav-content-mobile {
+  height: calc(100vh - 112px);
+}
+
+
+.desktop-footer {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  height: 54px;
+  z-index: 100;
+}
+
+.mobile-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 56px;
+  z-index: 100;
+}
+
+.active {
+  background-color: #303030;
+}
+
+.icon-footer {
+  margin: 0 !important;
+}
+
+@-webkit-keyframes awesome-moving-colors {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@-moz-keyframes awesome-moving-colors {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes awesome-moving-colors {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.awesome-moving-colors-text {
+  background: linear-gradient(270deg, #ece94c, #18b3c5, #ffffff);
+  background-size: 1400% 1400%;
+  animation: awesome-moving-colors 12s ease 0.5s;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.letter.r {
+  color: #f44336;
+}
+.letter.u {
+  color: #4caf50;
+}
+.letter.n {
+  color: #2196f3;
+}
+.letter.d {
+  color: #ff9800;
+}
+.letter.u {
+  color: #4caf50;
+}
+.letter.m {
+  color: #9c27b0;
+}
+.letter.b {
+  color: #ff5722;
+}
+.letter.u {
+  color: #4caf50;
+}
+.letter.n2 {
+  color: #ff5722;
+}
+.letter.t {
+  color: #00bcd4;
+}
+
+.letter {
+  font-family: "Caviar Dreams", sans-serif;
+  font-size: .9em;
+  display: inline-block;
+
+
+  // outline
+  // color: #000;
+  -webkit-text-stroke: 0.5px #ddd;
+}
+
+.n49-grad-font {
+  font-family: 'Bangla MN', sans-serif;
+  // it seems to have too much space at the bottom
+  font-size: 1.2em;
+  height: 1.3em;
+}
+
+.mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-item-content {
+  align-items: center;
+
+  .mat-icon {
+    margin-right: 16px;
+    vertical-align: middle;
+  }
+}
+
+.sidebar-nav-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 12px 16px !important;
+
+  .mat-icon {
+    margin-right: 16px;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1;
+  }
+}
+
+.mat-mdc-nav-list .mat-mdc-list-item .mat-icon {
+  vertical-align: top;
+  line-height: inherit;
+}

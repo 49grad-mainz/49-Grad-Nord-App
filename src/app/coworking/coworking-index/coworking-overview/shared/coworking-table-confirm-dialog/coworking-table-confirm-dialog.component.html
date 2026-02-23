@@ -1,0 +1,90 @@
+<div class="padding">
+  @if (isDeleteMode) {
+    <!-- Delete Mode -->
+    <h1>Reservierung löschen?</h1>
+
+    <div class="delete-info">
+      <mat-icon class="warning-icon">warning</mat-icon>
+      <p class="warning-text">Möchtest du diese Reservierung wirklich löschen?</p>
+    </div>
+
+    <div class="reservation-details">
+      <p><strong>Tisch:</strong> {{ data.tableName }}</p>
+      <p><strong>Datum:</strong> {{ formatReservationDate() }}</p>
+      <p><strong>Zeit:</strong> {{ formatReservationTime() }}</p>
+      @if (data.reservation?.comment) {
+        <p><strong>Kommentar:</strong> {{ data.reservation.comment }}</p>
+      }
+    </div>
+
+    <br>
+    <div class="button-box">
+      <button mat-raised-button (click)="onNoClick()">Abbrechen</button>
+      <button mat-raised-button color="warn" [disabled]="isMakingReservation" (click)="onDelete()">
+        Löschen
+      </button>
+    </div>
+  } @else {
+    <!-- Create/Reserve Mode -->
+    <h1>{{ isNightMode ? 'Nachtreservierung erstellen' : 'Tisch gleich reservieren?' }}</h1>
+
+    @if (isNightMode && data.availableTables && data.availableTables.length > 0) {
+      <mat-form-field>
+        <mat-label>Tisch auswählen</mat-label>
+        <mat-select [formControl]="selectedTable">
+          @for (table of data.availableTables; track table.id) {
+            <mat-option [value]="table.id">
+              {{ table.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <p>Ausgewählter Tisch: {{ data.tableName }}</p>
+    }
+
+    <p>Datum: {{ data.date | date: 'dd.MM.yyyy' }}</p>
+
+    @if (isNightMode) {
+      <mat-form-field>
+        <mat-label>Startzeit (Nachts)</mat-label>
+        <mat-select [formControl]="selectedStartTime">
+          @for (hour of availableStartTimes; track hour) {
+            <mat-option [value]="hour">
+              {{ hour.toString().padStart(2, '0') }}:00 Uhr
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <p>Ausgewählte Uhrzeit: {{ data.time }}:00 Uhr</p>
+    }
+
+    <mat-form-field>
+      <mat-label>Für wie lange?</mat-label>
+      <mat-select [formControl]="selectedHours">
+        @for (hour of hours; track hour) {
+          <mat-option [value]="hour">
+            {{ hour }} Stunden
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Kommentar</mat-label>
+      <input matInput placeholder="Notiz für Mitnutzer (z.B. Projektarbeit, Licht brennt)" [formControl]="comment">
+    </mat-form-field>
+
+    @if (isNightMode) {
+      <p class="night-hint">💡 Tipp: Gib an, warum du nachts arbeitest, damit andere Bescheid wissen (z.B. "Frist morgen" oder "Ruhige Arbeitsatmosphäre")</p>
+    }
+
+    <br>
+    <div class="button-box">
+      <button mat-raised-button color="warn" (click)="onNoClick()">Abbrechen</button>
+      <button mat-raised-button color="primary" [disabled]="isMakingReservation" (click)="onReserve()">Reservieren
+      </button>
+    </div>
+  }
+</div>

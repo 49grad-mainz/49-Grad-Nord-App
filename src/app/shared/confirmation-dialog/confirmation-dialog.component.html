@@ -1,0 +1,110 @@
+<h2 mat-dialog-title>
+  {{ data.mode === 'delete' ? 'Reservierungs-Details' : 'Reservierung bearbeiten' }}
+</h2>
+
+<mat-dialog-content>
+  @if (data.mode === 'delete' && (isOwner$ | async)) {
+    <p>Möchtest du die folgende Reservierung wirklich löschen?</p>
+  }
+
+  <!-- Display mode: Show current reservation details -->
+  @if (!isEditMode) {
+    <div class="reservation-details">
+      <p><b>Veranstaltungsname:</b> {{ data.eventName }}</p>
+      <p><b>Datum:</b> {{ getFormattedDateWithWeekday(data.fromDateTime) }}</p>
+      <p><b>Beginn:</b> {{ data.fromDateTime | date: 'HH:mm' }}</p>
+      <p><b>Ende:</b> {{getFormattedDateWithWeekday(data.toDateTime)}}, {{ data.toDateTime | date: 'HH:mm' }}</p>
+      <p><b>Raum:</b> {{ data.roomName }}</p>
+    </div>
+  }
+
+  <!-- Edit mode: Show editable form -->
+  @if (isEditMode && (isOwner$ | async)) {
+    <div class="edit-form">
+      <mat-form-field class="full-width">
+        <input matInput
+               placeholder="Veranstaltungsname"
+               [(ngModel)]="editEventName"
+               (ngModelChange)="onEventNameChange()"
+               maxlength="100"
+               required>
+      </mat-form-field>
+
+      <div class="date-time-section">
+        <p><b>Zeitraum bearbeiten:</b></p>
+        <div class="button-array">
+          <button mat-raised-button color="primary" (click)="openFromTimePicker()">Startzeit ändern</button>
+          <button mat-raised-button color="primary" [disabled]="!editFromDateTime" (click)="openToTimePicker()">Endzeit ändern</button>
+        </div>
+
+        <div class="date-time-display">
+          @if (editFromDateTime) {
+            <p>Von: {{ editFromDateTime | date: 'dd.MM.yyyy HH:mm' }}</p>
+          }
+          @if (editToDateTime) {
+            <p>Bis: {{ editToDateTime | date: 'dd.MM.yyyy HH:mm' }}</p>
+          }
+        </div>
+
+        @if (isEndTimeInvalid()) {
+          <div class="warning">
+            <mat-icon>warning</mat-icon> Das Ende der Veranstaltung muss nach dem Beginn liegen.
+          </div>
+        }
+      </div>
+
+      <p><b>Raum:</b> {{ data.roomName }}</p>
+    </div>
+  }
+
+  <!-- Show toggle for owners in both display and edit mode -->
+  @if (isOwner$ | async) {
+    <div class="privacy-toggle">
+      <p><b>Art:</b></p>
+      @if (isEditMode) {
+        <mat-button-toggle-group
+          [(ngModel)]="isPrivateReservation"
+          (change)="onPrivateToggleChange()"
+          aria-label="Art der Reservierung">
+          <mat-button-toggle [value]="false">Öffentlich</mat-button-toggle>
+          <mat-button-toggle [value]="true">Privat</mat-button-toggle>
+        </mat-button-toggle-group>
+      } @else {
+        <p>{{ data.isPrivate ? 'Privat' : 'Öffentlich' }}</p>
+      }
+    </div>
+  }
+
+  <!-- Show current privacy state for non-owners -->
+  @if (!(isOwner$ | async)) {
+    <div class="privacy-display">
+      <p><b>Art:</b> {{ data.isPrivate ? 'Privat' : 'Öffentlich' }}</p>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <!-- Show Edit button only for owners and not in edit mode -->
+  @if ((isOwner$ | async) && !isEditMode && data.mode !== 'edit') {
+    <button
+      mat-button
+      (click)="onEditClick()">
+      Bearbeiten
+    </button>
+  }
+
+  <button mat-button (click)="onCancelClick()">
+    {{ isEditMode ? 'Abbrechen' : 'Schließen' }}
+  </button>
+
+  <!-- Show Delete/Save button only for owners -->
+  @if (isOwner$ | async) {
+    <button
+      mat-raised-button
+      [color]="data.mode === 'delete' ? 'warn' : 'primary'"
+      [disabled]="(isEditMode && (!hasChanges || !editEventName.trim() || isEndTimeInvalid())) || (!isEditMode && data.mode === 'edit')"
+      (click)="onConfirmClick()">
+      {{ data.buttonText.ok }}
+    </button>
+  }
+</mat-dialog-actions>

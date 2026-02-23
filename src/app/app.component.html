@@ -1,0 +1,192 @@
+<mat-toolbar color="primary" class="my-class-with-custom-shadow">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="sidenav.toggle()">
+      <img src="assets/icons/icon-96x96.png" alt="49°N Logo" class="logo-with-cool-circle-animation">
+      <!--      <mat-icon>menu</mat-icon>-->
+    </button>
+    <span class="n49-grad-font" routerLink="/dashboard">49°N -
+      <span class="letter r">r</span>
+      <span class="letter u">u</span>
+      <span class="letter n">n</span>
+      <span class="letter d">d</span>
+      <span class="letter u">u</span>
+      <span class="letter m">m</span>
+      <span class="">&nbsp;</span>
+      <span class="letter b">b</span>
+      <span class="letter u">u</span>
+      <span class="letter n2">n</span>
+      <span class="letter t">t</span>
+    </span>
+    <span class="spacer"></span>
+    @if (isLoggedIn$ | async) {
+      <button mat-icon-button (click)="navigateToUserProfile()">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    }
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [disabled]="!!(isLoggedIn$ | async)" (click)="navigateToLoginPage()">
+        <mat-icon>login</mat-icon>
+        <span>Einloggen</span>
+      </button>
+      <button mat-menu-item [disabled]="!!(isLoggedOut$ | async)" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Ausloggen</span>
+      </button>
+
+      @if (isLoggedIn$ | async) {
+        <button mat-menu-item (click)="navigateToImpressum()">
+          <span>Impressum</span>
+        </button>
+      }
+      @if (isLoggedIn$ | async) {
+        <button mat-menu-item (click)="navigateToDatenschutz()">
+          <span>Datenschutz</span>
+        </button>
+      }
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav
+               opened="false"
+               mode="over"
+               [fixedInViewport]="true"
+               [fixedTopGap]="56"
+               [fixedBottomGap]="0">
+    @if (isLoggedIn$ | async) {
+      <mat-nav-list>
+        <a mat-list-item routerLink="/dashboard" routerLinkActive="active" class="sidebar-nav-item">
+          <mat-icon>apps</mat-icon>
+          <span matLine>Übersicht</span>
+        </a>
+        <a mat-list-item routerLink="/waschen" routerLinkActive="active" class="sidebar-nav-item">
+          <mat-icon>local_laundry_service</mat-icon>
+          <span matLine>Waschen</span>
+        </a>
+        <a mat-list-item routerLink="/coworking" routerLinkActive="active" class="sidebar-nav-item">
+          <mat-icon>desktop_mac</mat-icon>
+          <span matLine>Coworking</span>
+        </a>
+        <!--      <a mat-list-item routerLink="/mein-haushalt" routerLinkActive="active">-->
+        <!--        <mat-icon>home</mat-icon>-->
+        <!--        <span matLine>Mein Haushalt</span>-->
+        <!--      </a>-->
+        <!--      <a mat-list-item routerLink="/leihen-tauschen" routerLinkActive="active">-->
+        <!--        <mat-icon>info</mat-icon>-->
+        <!--        <span matLine>Leihen/Tauschen</span>-->
+        <!--      </a>-->
+        <a mat-list-item
+           routerLink="/raumbelegung"
+           routerLinkActive="active">
+          <mat-icon>fireplace</mat-icon>
+          <span matLine>Gemeinschaftsräume</span>
+        </a>
+<!--        <a mat-list-item routerLink="/inventory"-->
+<!--           routerLinkActive="active">-->
+<!--          <mat-icon>movie</mat-icon>-->
+<!--          <span matLine>Technik</span>-->
+<!--        </a>-->
+        <a mat-list-item routerLink="/gemeinschafts-haushalt" routerLinkActive="active">
+          <mat-icon>info</mat-icon>
+          <span matLine>Gem.-Haushalt</span>
+        </a>
+        <!--      <a mat-list-item routerLink="/hausarbeiten" routerLinkActive="active">-->
+        <!--        <mat-icon>calendar_month</mat-icon>-->
+        <!--        <span matLine>Hausarbeiten</span>-->
+        <!--      </a>-->
+      </mat-nav-list>
+    }
+    @if (isLoggedOut$ | async) {
+      <mat-nav-list>
+        <a mat-list-item routerLink="/login" routerLinkActive="active">
+          <mat-icon>login</mat-icon>
+          <span matLine>Einloggen</span>
+        </a>
+        <a mat-list-item routerLink="/about" routerLinkActive="active">
+          <mat-icon>info</mat-icon>
+          <span matLine>Über 49°N App</span>
+        </a>
+      </mat-nav-list>
+    }
+  </mat-sidenav>
+  <mat-sidenav-content [class]="isMobileView ? 'sidenav-content-mobile' : 'sidenav-content-desktop'">
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+  <mat-sidenav-container></mat-sidenav-container>
+</mat-sidenav-container>
+<!--<mat-toolbar color="primary">-->
+<!--  <mat-toolbar-row>-->
+<!--    <span class="spacer"></span>-->
+<!--&lt;!&ndash;    3 links&ndash;&gt;-->
+<!--    <a mat-button routerLink="/dashboard" routerLinkActive="active">-->
+<!--      <mat-icon>apps</mat-icon>-->
+<!--&lt;!&ndash;      <span>Contact</span>&ndash;&gt;-->
+<!--    </a>-->
+<!--    <a mat-button routerLink="/mein-haushalt" routerLinkActive="active">-->
+<!--      <mat-icon>face</mat-icon>-->
+<!--&lt;!&ndash;      <span>Mein Haushalt</span>&ndash;&gt;-->
+<!--    </a>-->
+<!--    <a mat-button routerLink="/gemeinschafts-haushalt" routerLinkActive="active">-->
+<!--      <mat-icon>groups</mat-icon>-->
+<!--&lt;!&ndash;      <span>Gem.-Haushalt</span>&ndash;&gt;-->
+<!--    </a>-->
+
+<!--  </mat-toolbar-row>-->
+<!--</mat-toolbar>-->
+
+<!--sticky footer-->
+<div [class]="isMobileView ? 'mobile-footer' : 'desktop-footer'">
+  <mat-toolbar color="primary">
+    @if (isLoggedIn$ | async) {
+      <mat-toolbar-row>
+        <span class="spacer"></span>
+        <a mat-button routerLink="/dashboard" routerLinkActive="active">
+          <mat-icon class="icon-footer">apps</mat-icon>
+        </a>
+        <a mat-button routerLink="/waschen" routerLinkActive="active">
+          <mat-icon class="icon-footer">local_laundry_service</mat-icon>
+        </a>
+        <a mat-button routerLink="/coworking" routerLinkActive="active">
+          <mat-icon class="icon-footer">desktop_mac</mat-icon>
+        </a>
+        <!--      <a mat-button routerLink="/mein-haushalt" routerLinkActive="active">-->
+        <!--        <mat-icon class="icon-footer">face</mat-icon>-->
+        <!--      </a>-->
+        <!--      <a mat-button routerLink="/leihen-tauschen" routerLinkActive="active">-->
+        <!--        <mat-icon class="icon-footer">recycling</mat-icon>-->
+        <!--      </a>-->
+        <a mat-button routerLink="/raumbelegung" routerLinkActive="active">
+          <mat-icon class="icon-footer">fireplace</mat-icon>
+        </a>
+<!--        <a mat-button routerLink="/inventory" routerLinkActive="active">
+          <mat-icon class="icon-footer">movie</mat-icon>
+        </a>-->
+        <a mat-button routerLink="/gemeinschafts-haushalt" routerLinkActive="active">
+          <mat-icon class="icon-footer">groups</mat-icon>
+        </a>
+        <!--      <a mat-button routerLink="/hausarbeiten" routerLinkActive="active">-->
+        <!--        <mat-icon class="icon-footer">calendar_month</mat-icon>-->
+        <!--      </a>-->
+      </mat-toolbar-row>
+    }
+    @if (isLoggedOut$ | async) {
+      <mat-toolbar-row>
+        <a mat-button routerLink="/impressum" routerLinkActive="active">
+          Impressum
+        </a>
+        <a mat-button routerLink="/datenschutz" routerLinkActive="active">
+          Datenschutz
+        </a>
+        <a mat-button routerLink="/login" routerLinkActive="active">
+          Einloggen
+        </a>
+      </mat-toolbar-row>
+    }
+  </mat-toolbar>
+</div>
+

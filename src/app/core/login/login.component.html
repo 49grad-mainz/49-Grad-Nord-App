@@ -1,0 +1,19 @@
+@if (isLoggedIn$ | async) {
+  <div class="already-logged-in">
+    <p class="already-logged-in__message">Du bist bereits eingeloggt.</p>
+    <button mat-raised-button color="primary" (click)="redirectToMainPage()">Zur Startseite</button>
+    <button mat-raised-button color="accent" (click)="logout()" [disabled]="isLoggingOut">Ausloggen</button>
+  </div>
+}
+@if (!(isLoggedIn$ | async)) {
+  <app-login-with-google></app-login-with-google>
+  <mat-divider></mat-divider>
+  <mat-tab-group>
+    <mat-tab label="Einloggen">
+      <app-login-with-email-and-password></app-login-with-email-and-password>
+    </mat-tab>
+    <mat-tab label="Registrieren">
+      <app-register-with-email-and-password></app-register-with-email-and-password>
+    </mat-tab>
+  </mat-tab-group>
+}

@@ -1,0 +1,144 @@
+<!--<div class="welcome-section">-->
+<!--  <mat-slide-toggle [(ngModel)]="showEvents" (change)="updateShowEvents()">Veranstaltungen auf Startseite anzeigen</mat-slide-toggle>-->
+<!--</div>-->
+
+<mat-tab-group dynamicHeight>
+  <!-- Create a tab for each room -->
+  @for (room of rooms; track trackByRoomId($index, room)) {
+  <mat-tab [label]="room.name">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-title>{{ room.name }}</mat-card-title>
+          <mat-card-subtitle>{{ room.location }}</mat-card-subtitle>
+        </mat-card-title-group>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ room.description }}</p>
+        <mat-divider class="bit-of-vertical-space-in-divider"></mat-divider>
+        <mat-tab-group dynamicHeight (selectedTabChange)="onTabSelectionChange($event, room.id)">
+          <mat-tab label="Belegung">
+            <div class="reservation-filter">
+              <mat-button-toggle-group [(ngModel)]="roomStates[room.id].filterType" (change)="onFilterChange(room.id)"
+                name="reservationFilter" aria-label="Reservierung Filter">
+                <mat-button-toggle value="all">Alle</mat-button-toggle>
+                <mat-button-toggle value="mine">Meine</mat-button-toggle>
+                <mat-button-toggle value="private">Privat</mat-button-toggle>
+                <mat-button-toggle value="public">Öffentlich</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <!-- Bind each table to its specific data source -->
+            <table mat-table [dataSource]="dataSources[room.id]" matSort class="mat-elevation-z8">
+              <!-- Name Column (Title) -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="eventName">Titel</th>
+                <td mat-cell *matCellDef="let event">{{ event.eventName }}</td>
+              </ng-container>
+
+              <!-- Creator Column (Von) -->
+              <ng-container matColumnDef="creator">
+                <th mat-header-cell *matHeaderCellDef>Von</th>
+                <td mat-cell *matCellDef="let event">{{ event.creatorName | firstName }}</td>
+              </ng-container>
+
+              <!-- Time Column -->
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="fromDateTime">Zeit</th>
+                <td mat-cell *matCellDef="let event">
+                  @if (isSameDay(event.fromDateTime, event.toDateTime)) {
+                  {{ event.fromDateTime | date: 'dd.MM.yy HH:mm' }} - {{ event.toDateTime | date: 'HH:mm' }}
+                  } @else {
+                  {{ event.fromDateTime | date: 'dd.MM.yy HH:mm' }} - {{ event.toDateTime | date: 'dd.MM.yy HH:mm' }}
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Private Column (Type) -->
+              <ng-container matColumnDef="private">
+                <th mat-header-cell *matHeaderCellDef>Art</th>
+                <td mat-cell *matCellDef="let event">
+                  <mat-icon>{{ event.isPrivate ? 'person' : 'public' }}</mat-icon>
+                </td>
+              </ng-container>
+
+              <!-- Table Rows -->
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"
+                class="clickable-row" [class.past-event]="isPastEvent(row)"></tr>
+            </table>
+            <!-- Show message when no reservations found -->
+            @if (roomStates[room.id].isLoading) {
+            <div class="spinner-container" style="display: flex; justify-content: center; padding: 20px;">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            } @else if (dataSources[room.id].data.length === 0) {
+            <div class="no-reservations">
+              @if (roomStates[room.id].filterType === 'mine') {
+              <p>
+                Du hast keine Reservierungen für diesen Raum.
+              </p>
+              }
+              @if (roomStates[room.id].filterType === 'private') {
+              <p>
+                Keine privaten Reservierungen für diesen Raum gefunden.
+              </p>
+              }
+              @if (roomStates[room.id].filterType === 'public') {
+              <p>
+                Keine öffentlichen Reservierungen für diesen Raum gefunden.
+              </p>
+              }
+              @if (roomStates[room.id].filterType === 'all') {
+              <p>
+                Keine Reservierungen für diesen Raum gefunden.
+              </p>
+              }
+            </div>
+            }
+          </mat-tab>
+          <!-- Reservation Tab -->
+          <mat-tab label="Reservieren">
+            <div class="reservation-area">
+              <!-- Add unique ID and template reference variable to the input -->
+              <mat-form-field class="full-width">
+                <input matInput placeholder="Name der Veranstaltung*" [(ngModel)]="roomStates[room.id].eventName"
+                  maxlength="100" required [id]="'eventNameInput-' + room.id" #eventNameInput>
+              </mat-form-field>
+              <mat-slide-toggle [(ngModel)]="roomStates[room.id].isPrivateEvent">Private
+                Veranstaltung</mat-slide-toggle>
+              <div class="button-array">
+                <button mat-raised-button color="primary" (click)="openFromTimePicker(room.id)">Von</button>
+                <button mat-raised-button color="primary" [disabled]="!roomStates[room.id].fromDateTime"
+                  (click)="openToTimePicker(room.id)">Bis</button>
+              </div>
+              <i>Das Setzen der Von-Zeit macht automatisch einen 2h-Zeitraum.</i>
+              <div class="date-time-display">
+                @if (roomStates[room.id].fromDateTime) {
+                <p>Von: {{ roomStates[room.id].fromDateTime | date: 'dd.MM.yyyy HH:mm' }}</p>
+                }
+                @if (roomStates[room.id].toDateTime) {
+                <p>Bis: {{ roomStates[room.id].toDateTime | date: 'dd.MM.yyyy HH:mm' }}</p>
+                }
+              </div>
+              @if (isEndTimeInvalid(room.id)) {
+              <div class="warning">
+                <mat-icon>warning</mat-icon> Das Ende der Veranstaltung muss nach dem Beginn liegen.
+              </div>
+              }
+              <div class="button-row">
+                <button mat-raised-button color="primary" [disabled]="!canReserveRoom(room.id) || isReserving"
+                  (click)="reserveRoom(room.id)">
+                  Reservieren
+                  @if (isReserving) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                  }
+                </button>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+  }
+</mat-tab-group>

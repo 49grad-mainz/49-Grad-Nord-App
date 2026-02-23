@@ -1,0 +1,46 @@
+<div class="reservations-list">
+  <h2>Meine Reservierungen <button mat-raised-button (click)="refreshMyReservations()" [disabled]="isRefreshing">Aktualisieren</button></h2>
+
+  <table mat-table [dataSource]="reservations" class="mat-elevation-z8">
+
+    <!-- Tisch Column -->
+    <ng-container matColumnDef="table">
+      <th mat-header-cell *matHeaderCellDef> Tisch</th>
+      <td mat-cell *matCellDef="let reservation"> {{reservation.tableName}} </td>
+    </ng-container>
+
+    <!-- Datum Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Datum</th>
+      <td mat-cell *matCellDef="let reservation"> {{reservation.startTime | date: 'dd.MM.yy'}} </td>
+    </ng-container>
+
+    <!-- Zeit Column -->
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef> Zeit</th>
+      <td mat-cell *matCellDef="let reservation"> {{reservation.startTime | date: 'HH:mm'}} ({{reservation.hoursTotal}}h)</td>
+    </ng-container>
+
+    <ng-container matColumnDef="menu">
+      <th mat-header-cell *matHeaderCellDef> Menü</th>
+      <td mat-cell *matCellDef="let reservation">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item disabled (click)="editReservation(reservation)">
+            <mat-icon>edit</mat-icon>
+            <span>Bearbeiten</span>
+          </button>
+          <button mat-menu-item (click)="deleteReservation(reservation)">
+            <mat-icon>delete</mat-icon>
+            <span>Löschen</span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

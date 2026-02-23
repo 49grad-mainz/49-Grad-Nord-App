@@ -1,0 +1,14 @@
+.already-logged-in {
+  // a bit space on the left
+  margin-left: 20px;
+  // there is a p and two buttons. one for move to main page and one for logout
+  &__message {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+  }
+  // give the two buttons some space
+  button {
+    margin-right: 10px;
+  }
+}

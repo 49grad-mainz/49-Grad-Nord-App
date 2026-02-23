@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>Reservierung: {{ data.resource.name }}</h2>
+
+<mat-dialog-content>
+    @if (!isEditMode) {
+    <div class="quick-buttons">
+        <label>Schnellwahl (ab jetzt):</label>
+        <div class="button-row">
+            <button type="button" mat-stroked-button *ngFor="let h of [1,2,3,4,5,6,7,8]" (click)="quickBook(h)">
+                +{{h}}h
+            </button>
+        </div>
+    </div>
+    <div class="divider">oder manuell:</div>
+    }
+
+    <form [formGroup]="form" class="booking-form">
+        <h4>Start</h4>
+        <div class="date-time-row">
+            <mat-form-field appearance="fill">
+                <mat-label>Datum</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Uhrzeit</mat-label>
+                <input matInput [matTimepicker]="startPickerTime" formControlName="startTime" readonly
+                    (click)="startPickerTime.open()" style="cursor: pointer">
+                <mat-timepicker-toggle matSuffix [for]="startPickerTime"></mat-timepicker-toggle>
+                <mat-timepicker #startPickerTime></mat-timepicker>
+            </mat-form-field>
+        </div>
+
+        <h4>Ende</h4>
+        <div class="date-time-row">
+            <mat-form-field appearance="fill">
+                <mat-label>Datum</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Uhrzeit</mat-label>
+                <input matInput [matTimepicker]="endPickerTime" formControlName="endTime" readonly
+                    (click)="endPickerTime.open()" style="cursor: pointer">
+                <mat-timepicker-toggle matSuffix [for]="endPickerTime"></mat-timepicker-toggle>
+                <mat-timepicker #endPickerTime></mat-timepicker>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Kommentar (optional)</mat-label>
+            <textarea matInput formControlName="comment"></textarea>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">Abbrechen</button>
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="form.invalid">
+        {{ isEditMode ? 'Speichern' : 'Reservieren' }}
+    </button>
+</mat-dialog-actions>

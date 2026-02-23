@@ -1,0 +1,58 @@
+<div class="user-reservations-container">
+    <h3>Meine Reservierungen</h3>
+
+    <div class="reservations-list">
+        @for (res of upcomingReservations; track res.id) {
+        <div class="reservation-item upcoming">
+            <div class="reservation-info">
+                <span class="date">{{ res.startTime | date:'EEE, dd.MM.yyyy' }}</span>
+                <span class="time">{{ res.startTime | date:'HH:mm' }} - {{ res.endTime | date:'HH:mm' }}</span>
+                @if (res.comment) {
+                <span class="comment">{{ res.comment }}</span>
+                }
+            </div>
+            <div class="actions">
+                <button mat-icon-button color="primary" (click)="onEdit(res)" matTooltip="Bearbeiten">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="onDelete(res)" matTooltip="Löschen">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+        }
+        @if (upcomingReservations.length === 0) {
+        <div class="empty-state">Keine aktuellen Reservierungen.</div>
+        }
+    </div>
+
+    @if (pastReservations.length > 0) {
+    <div class="past-reservations-toggle">
+        <button mat-button (click)="togglePast()">
+            {{ showPast ? 'Vergangene ausblenden' : 'Vergangene anzeigen (' + pastReservations.length + ')' }}
+            <mat-icon>{{ showPast ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+    </div>
+
+    @if (showPast) {
+    <div class="reservations-list past">
+        @for (res of pastReservations; track res.id) {
+        <div class="reservation-item past">
+            <div class="reservation-info">
+                <span class="date">{{ res.startTime | date:'EEE, dd.MM.yyyy' }}</span>
+                <span class="time">{{ res.startTime | date:'HH:mm' }} - {{ res.endTime | date:'HH:mm' }}</span>
+                @if (res.comment) {
+                <span class="comment">{{ res.comment }}</span>
+                }
+            </div>
+            <div class="actions">
+                <button mat-icon-button color="warn" (click)="onDelete(res)" matTooltip="Löschen">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+        }
+    </div>
+    }
+    }
+</div>

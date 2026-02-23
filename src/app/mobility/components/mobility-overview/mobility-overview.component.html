@@ -1,0 +1,114 @@
+<div class="mobility-overview-container">
+    @if (resource) {
+    <header class="page-header">
+        <div class="title-row">
+            <button mat-icon-button routerLink="/dashboard">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <h2>{{ resource.name }} Kalender</h2>
+
+            <div class="view-controls" style="display: flex; align-items: center; margin-left: auto; gap: 8px;">
+                <ng-container *ngIf="viewMode === 'week'">
+                    <button mat-icon-button (click)="previousWeek()">
+                        <mat-icon>chevron_left</mat-icon>
+                    </button>
+                    <span (click)="goToCurrentWeek()"
+                        style="font-size: 14px; font-weight: 500; cursor: pointer; user-select: none;"
+                        matTooltip="Zur aktuellen Woche springen">KW {{ currentWeekStart | date:'w' }}</span>
+                    <button mat-icon-button (click)="nextWeek()">
+                        <mat-icon>chevron_right</mat-icon>
+                    </button>
+                </ng-container>
+
+                <button mat-icon-button (click)="toggleViewMode()"
+                    [matTooltip]="viewMode === 'week' ? 'Listenansicht' : 'Wochenansicht'">
+                    <mat-icon>{{ viewMode === 'week' ? 'list' : 'view_week' }}</mat-icon>
+                </button>
+            </div>
+        </div>
+        <!-- Future: Week navigation buttons < > -->
+    </header>
+    }
+
+    <div class="week-grid" *ngIf="viewMode === 'week'">
+        @for (day of weekDays; track day.date) {
+        <div class="day-column" [class.today]="day.isToday">
+            <div class="day-header">
+                {{ day.label }}
+            </div>
+            <div class="day-content">
+                @for (res of getReservationsForDay(day.date); track res.id) {
+                <div class="reservation-card" (click)="openReservationDetails(res)">
+                    <div class="time">
+                        {{ formatTime(res.startTime) }} - {{ formatTime(res.endTime) }}
+                    </div>
+                    <div class="user-name" style="font-weight: 600; font-size: 13px; color: #40c4ff; margin: 2px 0;">
+                        {{ res.userName }}
+                    </div>
+                    @if (res.comment && res.comment.trim().length > 0) {
+                    <div class="comment-icon">
+                        <mat-icon [matTooltip]="res.comment" (click)="$event.stopPropagation()">chat_bubble</mat-icon>
+                    </div>
+                    }
+                    @if (res.endTime.getDate() !== res.startTime.getDate()) {
+                    <div class="multi-day-badge">
+                        (Mehrtägig)
+                    </div>
+                    }
+                </div>
+                }
+                @if (getReservationsForDay(day.date).length === 0) {
+                <div class="empty-state">
+                    Frei
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="list-view" *ngIf="viewMode === 'list'">
+        <div class="list-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">Alle Reservierungen</h3>
+            <mat-slide-toggle [(ngModel)]="showPast" color="primary">Vergangene anzeigen</mat-slide-toggle>
+        </div>
+        <div class="reservation-list">
+            @for (res of sortedReservations; track res.id) {
+            <div class="list-item" (click)="openReservationDetails(res)">
+                <div class="date-col">
+                    <span class="day">{{ formatDate(res.startTime) }}</span>
+                    <span class="time">
+                        {{ formatTime(res.startTime) }} - {{ formatTime(res.endTime) }}
+                        @if (res.startTime.getDate() !== res.endTime.getDate()) {
+                        <span>({{ formatDate(res.endTime) }})</span>
+                        }
+                    </span>
+                </div>
+                <div class="user-col">
+                    {{ res.userName }}
+                </div>
+                <div class="info-col">
+                    @if (res.comment) {
+                    <span class="comment-preview">{{ res.comment }}</span>
+                    }
+                </div>
+                <div class="actions-col">
+                    <button mat-icon-button color="warn" *ngIf="res.userId === currentUserId"
+                        (click)="$event.stopPropagation(); onDeleteReservation(res)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+            }
+            @if (sortedReservations.length === 0) {
+            <div class="empty-list">Keine Reservierungen gefunden.</div>
+            }
+        </div>
+    </div>
+
+    <!-- My Reservations Section -->
+    <app-mobility-user-reservations [reservations]="myReservations"
+        (reservationUpdated)="generateWeek(currentWeekStart)" (reservationDeleted)="onDeleteReservation($event)">
+    </app-mobility-user-reservations>
+</div>

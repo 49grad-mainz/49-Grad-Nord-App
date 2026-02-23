@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>Reservierung Details</h2>
+<mat-dialog-content class="details-content">
+    <div class="detail-row">
+        <mat-icon>person</mat-icon>
+        <span>{{ data.userName || 'Unbekannt' }}</span>
+    </div>
+
+    <div class="detail-row">
+        <mat-icon>calendar_today</mat-icon>
+        @if (isSameDay) {
+        <span>{{ data.reservation.startTime | date:'EEEE, d. MMMM y' : '' : 'de' }}</span>
+        } @else {
+        <span>
+            {{ data.reservation.startTime | date:'d. MMM y' : '' : 'de' }} -
+            {{ data.reservation.endTime | date:'d. MMM y' : '' : 'de' }}
+        </span>
+        }
+    </div>
+
+    <div class="detail-row">
+        <mat-icon>schedule</mat-icon>
+        <span>
+            @if (isSameDay) {
+            {{ data.reservation.startTime | date:'HH:mm' }} - {{ data.reservation.endTime | date:'HH:mm' }}
+            } @else {
+            {{ data.reservation.startTime | date:'HH:mm' }} - {{ data.reservation.endTime | date:'HH:mm' }}
+            }
+        </span>
+    </div>
+
+    @if (data.reservation.comment) {
+    <div class="detail-row comment">
+        <mat-icon>comment</mat-icon>
+        <p>{{ data.reservation.comment }}</p>
+    </div>
+    }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="onClose()">Schließen</button>
+
+    @if ((currentUserId$ | async)?.uid === data.reservation.userId) {
+    <button mat-flat-button color="warn" (click)="onDelete()">
+        <mat-icon>delete</mat-icon> Löschen
+    </button>
+    <button mat-flat-button color="primary" (click)="onEdit()">
+        <mat-icon>edit</mat-icon> Bearbeiten
+    </button>
+    }
+</mat-dialog-actions>

@@ -1,0 +1,23 @@
+<p>Ich hatte für mich selbst zumindest den Wunsch den Putzplan irgendwie hierhin zu tun, damit das nicht aus den Augen verloren wird. Habe aber noch keine ausgereifte Idee, wie das umsetzbar wäre.</p>
+<p>Vielelicht was mit Drag & Drop.</p>
+<div class="example-container">
+  <h2>Putzreihenfolge Treppenhaus Süd</h2>
+  <h4>Das sind noch nicht die richtigen Angaben.</h4>
+
+  <div
+    cdkDropList
+    [cdkDropListData]="entries"
+    class="example-list"
+    (cdkDropListDropped)="drop($event)"
+    [cdkDropListEnterPredicate]="noReturnPredicate">
+    @for (entry of entries; track entry.flat) {
+      <div
+        class="example-box"
+        [cdkDragData]="entry"
+        cdkDrag>
+        KW {{entry.kw}} - Wohnung {{entry.flat}}
+      </div>
+    }
+  </div>
+</div>
+
